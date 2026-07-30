@@ -1,0 +1,48 @@
+{
+  "siteName": "Crown Studios",
+  "siteDescription": "Premium Minecraft configurations and server setups. Trusted by server owners worldwide.",
+  "siteUrl": "https://crownstudio.com",
+  "logo": "/images/logo.png",
+  "socialLinks": {
+    "discord": "https://crownstudio.com/",
+    "youtube": "https://crownstudio.com/",
+    "builtbybit": "https://crownstudio.com/"
+  },
+  "contact": {
+    "email": "contact@crownstudio.com",
+    "discord": "crownstudio",
+    "responseTime": " Within 24 hours"
+  },
+  "stats": {
+    "servers": 150,
+    "clients": 200,
+    "resources": 300
+  },
+  "navLinks": [
+    {
+      "name": "Home",
+      "url": "/"
+    },
+    {
+      "name": "About Us",
+      "url": "/about"
+    },
+    {
+      "name": "Shop",
+      "url": "/products"
+    },
+    {
+      "name": "Contact",
+      "url": "/contact"
+    }
+  ],
+  "categories": [
+    "Setup",
+    "Config",
+    "Plugin"
+  ],
+  "ctaButton": {
+    "text": "Get Started",
+    "url": "https://builtbybit.com/members/crownstudio"
+  }
+}

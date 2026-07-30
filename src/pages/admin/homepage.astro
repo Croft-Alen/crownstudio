@@ -1,0 +1,553 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import homeData from '../../data/pages/home.json';
+
+const session = Astro.cookies.get('admin_session');
+if (!session || session.value !== 'authenticated') {
+  return Astro.redirect('/admin/login');
+}
+
+const section = Astro.url.searchParams.get('section') || 'hero';
+const sections = ['hero', 'features', 'categories', 'reviews', 'cta', 'marquee'];
+
+const sectionLabels = {
+  hero: 'Hero',
+  features: 'Features',
+  categories: 'Categories',
+  reviews: 'Reviews',
+  cta: 'CTA',
+  marquee: 'Marquee'
+};
+
+const iconOptions = [
+  { value: 'settings', label: 'Settings' },
+  { value: 'rocket', label: 'Rocket' },
+  { value: 'check', label: 'Check' },
+  { value: 'link', label: 'Link' },
+  { value: 'star', label: 'Star' },
+  { value: 'refresh', label: 'Refresh' },
+  { value: 'heart', label: 'Heart' },
+  { value: 'user', label: 'User' },
+  { value: 'globe', label: 'Globe' },
+  { value: 'shield', label: 'Shield' },
+  { value: 'code', label: 'Code' },
+];
+
+const statLabels = [
+  { id: 'stat1', label: 'Stat 1', default: '200+ servers configured' },
+  { id: 'stat2', label: 'Stat 2', default: 'Setup completed' },
+  { id: 'stat3', label: 'Stat 3', default: 'Optimized' },
+  { id: 'stat4', label: 'Stat 4', default: 'Ready-to-deploy' },
+  { id: 'stat5', label: 'Stat 5', default: '24/7 dedicated support' },
+  { id: 'stat6', label: 'Stat 6', default: 'High-performance optimized' }
+];
+---
+
+<AdminLayout>
+  <div class="max-w-5xl">
+    
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-text-heading">Homepage Settings</h1>
+      <p class="text-text-muted text-sm mt-1">Manage all content for your homepage</p>
+    </div>
+
+    <div class="flex flex-wrap gap-6 mb-6 border-b border-border pb-0">
+      {sections.map((s) => (
+        <a 
+          href={`/admin/homepage?section=${s}`}
+          class={`pb-2.5 text-sm font-medium transition-all duration-200 relative ${
+            section === s 
+              ? 'text-text-heading' 
+              : 'text-text-muted hover:text-text-heading'
+          }`}
+        >
+          {sectionLabels[s]}
+          {section === s && (
+            <span class="absolute bottom-0 left-0 right-0 h-0.5 bg-brand rounded-full"></span>
+          )}
+        </a>
+      ))}
+    </div>
+
+    <form method="POST" action="/api/homepage/update">
+      <input type="hidden" name="section" value={section} />
+
+      {section === 'hero' && (
+        <div class="space-y-5">
+          
+          <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+            <h2 class="text-base font-semibold text-text-heading mb-4">Hero Content</h2>
+            <div class="space-y-3">
+              <div>
+                <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Tag</label>
+                <input 
+                  type="text" 
+                  name="heroTag" 
+                  value={homeData.hero.tag}
+                  class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                />
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Heading</label>
+                <input 
+                  type="text" 
+                  name="heroHeading" 
+                  value={homeData.hero.heading}
+                  class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                />
+                <p class="text-xs text-text-muted mt-1">Use &lt;br&gt; for line breaks</p>
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Subtext</label>
+                <textarea 
+                  name="heroSubtext" 
+                  rows="2"
+                  class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                >{homeData.hero.subtext}</textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+            <h2 class="text-base font-semibold text-text-heading mb-4">Buttons</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Primary Text</label>
+                <input 
+                  type="text" 
+                  name="heroPrimaryText" 
+                  value={homeData.hero.primaryButton.text}
+                  class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                />
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Primary URL</label>
+                <input 
+                  type="text" 
+                  name="heroPrimaryUrl" 
+                  value={homeData.hero.primaryButton.url}
+                  class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                />
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Secondary Text</label>
+                <input 
+                  type="text" 
+                  name="heroSecondaryText" 
+                  value={homeData.hero.secondaryButton.text}
+                  class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                />
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Secondary URL</label>
+                <input 
+                  type="text" 
+                  name="heroSecondaryUrl" 
+                  value={homeData.hero.secondaryButton.url}
+                  class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+            <h2 class="text-base font-semibold text-text-heading mb-4">Stats</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div>
+                <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Stat 1 Number</label>
+                <input 
+                  type="text" 
+                  name="stat1Number" 
+                  value={homeData.hero.stats[0].number}
+                  class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                />
+                <input 
+                  type="text" 
+                  name="stat1Label" 
+                  value={homeData.hero.stats[0].label}
+                  placeholder="Label"
+                  class="w-full mt-1.5 px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                />
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Stat 2 Number</label>
+                <input 
+                  type="text" 
+                  name="stat2Number" 
+                  value={homeData.hero.stats[1].number}
+                  class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                />
+                <input 
+                  type="text" 
+                  name="stat2Label" 
+                  value={homeData.hero.stats[1].label}
+                  placeholder="Label"
+                  class="w-full mt-1.5 px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                />
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Stat 3 Number</label>
+                <input 
+                  type="text" 
+                  name="stat3Number" 
+                  value={homeData.hero.stats[2].number}
+                  class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                />
+                <input 
+                  type="text" 
+                  name="stat3Label" 
+                  value={homeData.hero.stats[2].label}
+                  placeholder="Label"
+                  class="w-full mt-1.5 px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                />
+              </div>
+            </div>
+          </div>
+
+        </div>
+      )}
+
+     {section === 'features' && (
+  <div class="space-y-5">
+    
+    <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+      <h2 class="text-base font-semibold text-text-heading mb-4">Features Content</h2>
+      <div class="space-y-3">
+        <div>
+          <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Tag</label>
+          <input 
+            type="text" 
+            name="featuresTag" 
+            value={homeData.features.tag}
+            class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Heading</label>
+          <input 
+            type="text" 
+            name="featuresHeading" 
+            value={homeData.features.heading}
+            class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Subtext</label>
+          <textarea 
+            name="featuresSubtext" 
+            rows="2"
+            class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+          >{homeData.features.subtext}</textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+      <h2 class="text-base font-semibold text-text-heading mb-4">Feature Items</h2>
+      <div class="space-y-4">
+        {homeData.features.features.map((feature, index) => (
+          <div key={index} class="grid grid-cols-1 md:grid-cols-3 gap-3 p-3 bg-white/30 rounded-lg border border-border/60">
+            <input 
+              type="text" 
+              name={`featureTitle${index + 1}`} 
+              value={feature.title}
+              placeholder="Title"
+              class="px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+            />
+            <textarea 
+              name={`featureDesc${index + 1}`} 
+              rows="2"
+              placeholder="Description"
+              class="px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+            >{feature.description}</textarea>
+            <select 
+              name={`featureIcon${index + 1}`}
+              class="px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+            >
+              {iconOptions.map((opt) => (
+                <option value={opt.value} selected={feature.icon === opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          </div>
+        ))}
+      </div>
+      
+      <!-- Stats for First Feature Card -->
+      <div class="mt-4 p-4 bg-white/20 rounded-lg border border-border/60">
+        <h3 class="text-sm font-semibold text-text-heading mb-3">Stats for First Feature Card (Large Card)</h3>
+        <p class="text-xs text-text-muted mb-3">These stats appear only on the first (large) feature card. Leave label empty to remove.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {[1,2,3,4,5,6].map((num) => {
+            const firstFeature = homeData.features.features[0];
+            const stat = firstFeature?.stats?.[num-1] || { icon: 'check', label: '' };
+            return (
+              <div key={num} class="grid grid-cols-3 gap-2">
+                <div class="col-span-2">
+                  <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Stat {num} Label</label>
+                  <input 
+                    type="text" 
+                    name={`statLabel${num}`} 
+                    value={stat.label || ''}
+                    placeholder={`Stat ${num} label`}
+                    class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Icon</label>
+                  <select 
+                    name={`statIcon${num}`}
+                    class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                  >
+                    {iconOptions.map((opt) => (
+                      <option value={opt.value} selected={stat.icon === opt.value}>{opt.label}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+
+  </div>
+)}
+
+      {section === 'categories' && (
+        <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5 space-y-4">
+          <h2 class="text-base font-semibold text-text-heading mb-2">Categories Section</h2>
+          <div>
+            <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Tag</label>
+            <input 
+              type="text" 
+              name="categoriesTag" 
+              value={homeData.categories.tag}
+              class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Heading</label>
+            <input 
+              type="text" 
+              name="categoriesHeading" 
+              value={homeData.categories.heading}
+              class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Subtext</label>
+            <textarea 
+              name="categoriesSubtext" 
+              rows="2"
+              class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+            >{homeData.categories.subtext}</textarea>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Button Text</label>
+            <input 
+              type="text" 
+              name="categoriesButtonText" 
+              value={homeData.categories.buttonText}
+              class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+            />
+          </div>
+        </div>
+      )}
+
+      {section === 'reviews' && (
+        <div class="space-y-5">
+          
+          <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+            <h2 class="text-base font-semibold text-text-heading mb-4">Reviews Content</h2>
+            <div class="space-y-3">
+              <div>
+                <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Tag</label>
+                <input 
+                  type="text" 
+                  name="reviewsTag" 
+                  value={homeData.reviews.tag}
+                  class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                />
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Heading</label>
+                <input 
+                  type="text" 
+                  name="reviewsHeading" 
+                  value={homeData.reviews.heading}
+                  class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                />
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Subtext</label>
+                <textarea 
+                  name="reviewsSubtext" 
+                  rows="2"
+                  class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                >{homeData.reviews.subtext}</textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+            <h2 class="text-base font-semibold text-text-heading mb-4">Individual Reviews</h2>
+            <div class="space-y-4">
+              {homeData.reviews.reviews.map((review, index) => (
+                <div key={index} class="grid grid-cols-1 md:grid-cols-2 gap-3 p-3 bg-white/30 rounded-lg border border-border/60">
+                  <input 
+                    type="text" 
+                    name={`reviewName_${index}`} 
+                    value={review.name}
+                    placeholder="Name"
+                    class="px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                  />
+                  <input 
+                    type="text" 
+                    name={`reviewRole_${index}`} 
+                    value={review.role}
+                    placeholder="Role"
+                    class="px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                  />
+                  <textarea 
+                    name={`reviewText_${index}`} 
+                    rows="2"
+                    placeholder="Review text"
+                    class="col-span-1 md:col-span-2 px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                  >{review.text}</textarea>
+                  <div class="col-span-1 md:col-span-2 grid grid-cols-2 gap-3">
+                    <select 
+                      name={`reviewRating_${index}`}
+                      class="px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                    >
+                      {[1,2,3,4,5].map(r => (
+                        <option value={r} selected={review.rating === r}>{r} ★</option>
+                      ))}
+                    </select>
+                    <input 
+                      type="text" 
+                      name={`reviewInitial_${index}`} 
+                      value={review.initial}
+                      placeholder="Initial (e.g. R)"
+                      class="px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                      maxlength="2"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
+      )}
+
+      {section === 'cta' && (
+        <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5 space-y-4">
+          <h2 class="text-base font-semibold text-text-heading mb-2">CTA Section</h2>
+          <div>
+            <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Heading</label>
+            <input 
+              type="text" 
+              name="ctaHeading" 
+              value={homeData.cta.heading}
+              class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+            />
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Subtext</label>
+            <textarea 
+              name="ctaSubtext" 
+              rows="2"
+              class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+            >{homeData.cta.subtext}</textarea>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Primary Button Text</label>
+              <input 
+                type="text" 
+                name="ctaPrimaryText" 
+                value={homeData.cta.primaryButton.text}
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Primary URL</label>
+              <input 
+                type="text" 
+                name="ctaPrimaryUrl" 
+                value={homeData.cta.primaryButton.url}
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Secondary Button Text</label>
+              <input 
+                type="text" 
+                name="ctaSecondaryText" 
+                value={homeData.cta.secondaryButton.text}
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Secondary URL</label>
+              <input 
+                type="text" 
+                name="ctaSecondaryUrl" 
+                value={homeData.cta.secondaryButton.url}
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {section === 'marquee' && (
+        <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5 space-y-4">
+          <h2 class="text-base font-semibold text-text-heading mb-2">Marquee Section</h2>
+          <div>
+            <h3 class="text-sm font-medium text-text-heading mb-2">Row 1 (Left to Right)</h3>
+            {[0, 1, 2, 3, 4].map((i) => (
+              <input 
+                key={`r1-${i}`}
+                type="text" 
+                name={`marqueeRow1_${i}`} 
+                value={homeData.marquee.row1[i] || ''}
+                placeholder={`Item ${i + 1}`}
+                class="w-full mb-1.5 px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            ))}
+          </div>
+          <div>
+            <h3 class="text-sm font-medium text-text-heading mb-2">Row 2 (Right to Left)</h3>
+            {[0, 1, 2, 3, 4].map((i) => (
+              <input 
+                key={`r2-${i}`}
+                type="text" 
+                name={`marqueeRow2_${i}`} 
+                value={homeData.marquee.row2[i] || ''}
+                placeholder={`Item ${i + 1}`}
+                class="w-full mb-1.5 px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            ))}
+          </div>
+          <p class="text-xs text-text-muted">Leave empty to remove item. Max 5 items per row.</p>
+        </div>
+      )}
+
+      <div class="flex gap-3 pt-5 mt-2 border-t border-border">
+        <button 
+          type="submit" 
+          class="bg-brand text-white px-6 py-2 rounded-lg hover:bg-brand/80 transition-colors text-sm font-medium"
+        >
+          Save Changes
+        </button>
+        <a 
+          href="/admin" 
+          class="px-6 py-2 border border-border rounded-lg hover:bg-brand/10 transition-colors text-text-body text-sm font-medium"
+        >
+          Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</AdminLayout>

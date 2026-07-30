@@ -1,0 +1,106 @@
+---
+import { getPageData } from '../data/pages.js';
+
+const pageData = getPageData('home');
+const hero = pageData.hero;
+const stats = hero.stats;
+---
+
+<section class="relative min-h-[70vh] flex items-center overflow-hidden bg-transparent py-10">
+  
+  <div class="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto text-center">
+      
+      <!-- Tag -->
+      <div class="flex justify-center mb-3 animate-fade-in-up">
+        <span class="inline-block bg-brand text-white text-xs font-semibold tracking-[0.08em] uppercase px-4 py-1.5 rounded-full">
+          {hero.tag}
+        </span>
+      </div>
+      
+      <!-- Heading -->
+      <h1 class="text-4xl sm:text-5xl md:text-5xl lg:text-5xl font-bold text-text-heading leading-[1.1] mb-3 animate-fade-in-up animation-delay-100" set:html={hero.heading}>
+      </h1>
+      
+      <!-- Description -->
+      <p class="text-base md:text-lg text-text-body font-normal leading-relaxed max-w-2xl mx-auto mb-6 animate-fade-in-up animation-delay-200">
+        {hero.subtext}
+      </p>
+      
+      <!-- Buttons -->
+      <div class="flex flex-wrap items-center justify-center gap-4 animate-fade-in-up animation-delay-400">
+        <a 
+          href={hero.primaryButton.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center h-11 px-8 bg-brand text-white font-semibold text-sm rounded-full shadow-lg hover:shadow-xl transition-shadow duration-300"
+        >
+          {hero.primaryButton.text}
+        </a>
+        <a 
+          href={hero.secondaryButton.url}
+          class="inline-flex items-center justify-center h-11 px-8 text-brand hover:text-white font-semibold text-sm border-2 border-brand rounded-full hover:bg-brand transition-all duration-300"
+        >
+          {hero.secondaryButton.text}
+        </a>
+      </div>
+    </div>
+
+    <!-- Stats - Fixed visibility -->
+    <div class="grid grid-cols-3 gap-6 mt-12 max-w-2xl mx-auto text-center animate-fade-in-up animation-delay-600">
+      {stats.map((stat: any) => (
+        <div class="flex flex-col items-center group">
+          <div class="w-12 h-12 rounded-full bg-brand/10 flex items-center justify-center mb-2 group-hover:bg-brand/20 transition-colors duration-300 group-hover:scale-110">
+            <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {stat.icon === 'server' && (
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7"/>
+              )}
+              {stat.icon === 'users' && (
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5"/>
+              )}
+              {stat.icon === 'box' && (
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+              )}
+            </svg>
+          </div>
+          <div class="text-2xl font-bold text-brand">{stat.number}</div>
+          <div class="text-sm font-medium text-text-body">{stat.label}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .animate-fade-in-up {
+    animation: fadeInUp 0.8s ease-out forwards;
+    opacity: 0;
+  }
+  
+  .animation-delay-100 {
+    animation-delay: 0.1s;
+  }
+  
+  .animation-delay-200 {
+    animation-delay: 0.2s;
+  }
+  
+  .animation-delay-400 {
+    animation-delay: 0.4s;
+  }
+  
+  .animation-delay-600 {
+    animation-delay: 0.6s;
+  }
+</style>

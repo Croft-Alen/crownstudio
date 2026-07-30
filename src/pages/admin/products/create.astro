@@ -1,0 +1,500 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import categoriesData from '../../../data/categories.json';
+
+const session = Astro.cookies.get('admin_session');
+if (!session || session.value !== 'authenticated') {
+  return Astro.redirect('/admin/login');
+}
+---
+
+<AdminLayout>
+  <div class="max-w-4xl">
+    
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-text-heading">Add New Product</h1>
+      <p class="text-text-muted text-sm mt-1">Fill in the details below to create a new product</p>
+    </div>
+
+    <form method="POST" action="/api/products/create" enctype="multipart/form-data" id="productForm">
+      
+      <div class="space-y-5">
+        
+        <!-- Basic Information -->
+        <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+          <h2 class="text-base font-semibold text-text-heading mb-4">Basic Information</h2>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Product Name *</label>
+              <input 
+                type="text" 
+                name="name" 
+                id="productName"
+                required
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                placeholder="e.g. Arcane Survival Setup"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Slug *</label>
+              <input 
+                type="text" 
+                name="slug" 
+                id="productSlug"
+                required
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                placeholder="e.g. arcane-survival"
+              />
+              <p class="text-xs text-text-muted mt-1">URL-friendly name (lowercase, hyphens instead of spaces)</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Category *</label>
+                <select 
+                  name="category" 
+                  required
+                  class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                >
+                  <option value="">Select a category</option>
+                  {categoriesData.map((cat) => (
+                    <option value={cat.slug}>{cat.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Price *</label>
+                <input 
+                  type="number" 
+                  name="price" 
+                  step="0.01" 
+                  required
+                  class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                  placeholder="19.99"
+                />
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Rating</label>
+                <input 
+                  type="number" 
+                  name="rating" 
+                  step="0.1" 
+                  min="0" 
+                  max="5"
+                  value="0"
+                  class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                  placeholder="4.8"
+                />
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Reviews</label>
+                <input 
+                  type="number" 
+                  name="reviews" 
+                  min="0"
+                  value="0"
+                  class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                  placeholder="24"
+                />
+              </div>
+            </div>
+            <div class="flex items-center gap-3 pt-1">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  name="featured" 
+                  value="true"
+                  class="w-4 h-4 text-brand focus:ring-brand rounded border-border"
+                />
+                <span class="text-sm text-text-body">Featured Product</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Images -->
+        <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+          <h2 class="text-base font-semibold text-text-heading mb-4">Images</h2>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Main Image</label>
+              <input 
+                type="text" 
+                name="mainImageUrl" 
+                id="mainImageUrl"
+                placeholder="/uploads/products/arcane-survival/main.jpg"
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+              <div id="mainPreview" class="mt-2"></div>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Gallery Images</label>
+              <input 
+                type="text" 
+                name="galleryUrls" 
+                id="galleryUrls"
+                placeholder="/uploads/products/arcane-survival/gallery-1.jpg, /uploads/products/arcane-survival/gallery-2.jpg"
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+              <div id="galleryPreview" class="mt-2 flex flex-wrap gap-2"></div>
+              <p class="text-xs text-text-muted mt-1">Separate multiple images with commas</p>
+            </div>
+            <div class="text-xs text-text-muted p-3 bg-white/50 rounded-lg border border-border/60">
+              <p>Upload images to: <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs">public/uploads/products/[slug]/</code></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+          <h2 class="text-base font-semibold text-text-heading mb-4">Description</h2>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Short Description</label>
+              <textarea 
+                name="description" 
+                rows="2"
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                placeholder="Brief product description..."
+              ></textarea>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Detail Description</label>
+              <div class="border border-border rounded-lg overflow-hidden">
+                <!-- Toolbar -->
+                <div class="flex flex-wrap items-center gap-0.5 p-1.5 bg-white/50 border-b border-border" id="editor-toolbar">
+                  <button type="button" class="p-1.5 hover:bg-brand/10 rounded text-text-body" data-command="toggleBold" title="Bold">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M15.6 10.79c.97-.67 1.65-1.77 1.65-2.79 0-2.26-1.75-4-4-4H7v14h7.04c2.09 0 3.71-1.7 3.71-3.79 0-1.52-.86-2.82-2.15-3.42zM10 6.5h3c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-3v-3zm3.5 9H10v-3h3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5z"/></svg>
+                  </button>
+                  <button type="button" class="p-1.5 hover:bg-brand/10 rounded text-text-body" data-command="toggleItalic" title="Italic">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M10 4v3h2.21l-3.42 8H6v3h8v-3h-2.21l3.42-8H18V4h-8z"/></svg>
+                  </button>
+                  <button type="button" class="p-1.5 hover:bg-brand/10 rounded text-text-body" data-command="toggleUnderline" title="Underline">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 4c-3.31 0-6 2.69-6 6v4c0 3.31 2.69 6 6 6s6-2.69 6-6v-4c0-3.31-2.69-6-6-6zm4 10c0 2.21-1.79 4-4 4s-4-1.79-4-4v-4c0-2.21 1.79-4 4-4s4 1.79 4 4v4zm-8 6h8v2H8v-2z"/></svg>
+                  </button>
+                  <span class="w-px h-5 bg-border mx-0.5"></span>
+                  <button type="button" class="p-1.5 hover:bg-brand/10 rounded text-text-body" data-command="toggleBulletList" title="Bullet List">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M4 6h16v2H4V6zm0 5h16v2H4v-2zm0 5h16v2H4v-2z"/></svg>
+                  </button>
+                  <button type="button" class="p-1.5 hover:bg-brand/10 rounded text-text-body" data-command="toggleOrderedList" title="Numbered List">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 6h12v2H8V6zm0 5h12v2H8v-2zm0 5h12v2H8v-2zM4 5h2v1H4V5zm0 4h2v1H4V9zm0 4h2v1H4v-1z"/></svg>
+                  </button>
+                  <span class="w-px h-5 bg-border mx-0.5"></span>
+                  <button type="button" class="p-1.5 hover:bg-brand/10 rounded text-text-body" id="insertLinkBtn" title="Insert Link">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z"/></svg>
+                  </button>
+                  <span class="w-px h-5 bg-border mx-0.5"></span>
+                  <button type="button" class="p-1.5 hover:bg-brand/10 rounded text-text-body" data-command="undo" title="Undo">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L2 7v9h9l-3.62-3.62c1.39-1.16 3.16-1.88 5.12-1.88 3.54 0 6.55 2.31 7.6 5.5l2.37-.78C21.08 11.03 17.15 8 12.5 8z"/></svg>
+                  </button>
+                  <button type="button" class="p-1.5 hover:bg-brand/10 rounded text-text-body" data-command="redo" title="Redo">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M11.5 8c-3.65 0-7.58 2.03-9.47 5.62l2.37.78C5.95 13.31 8.96 11 12.5 11c1.96 0 3.73.72 5.12 1.88L14 16.5h9v-9l-3.62 3.62C16.55 8.99 14.15 8 11.5 8z"/></svg>
+                  </button>
+                </div>
+                
+                <!-- Editor -->
+                <div id="editor-container" class="min-h-[200px] bg-white/50"></div>
+                <input type="hidden" name="detailDescription" id="detailDescriptionInput" value="" />
+              </div>
+              <p class="text-xs text-text-muted mt-1">Format your content with bold, italic, lists, and links</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional -->
+        <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+          <h2 class="text-base font-semibold text-text-heading mb-4">Additional</h2>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Tags</label>
+              <input 
+                type="text" 
+                name="tags" 
+                placeholder="Survival, Medieval, Premium"
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Buy Link</label>
+              <input 
+                type="url" 
+                name="buyLink" 
+                placeholder="https://builtbybit.com/resources/..."
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="flex gap-3 pt-5 mt-2 border-t border-border">
+        <button 
+          type="submit" 
+          class="bg-brand text-white px-6 py-2 rounded-lg hover:bg-brand/80 transition-colors text-sm font-medium"
+        >
+          Create Product
+        </button>
+        <a 
+          href="/admin/products" 
+          class="px-6 py-2 border border-border rounded-lg hover:bg-brand/10 transition-colors text-text-body text-sm font-medium"
+        >
+          Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</AdminLayout>
+
+<!-- TipTap Scripts -->
+<script type="importmap">
+  {
+    "imports": {
+      "@tiptap/core": "/node_modules/@tiptap/core/dist/index.js",
+      "@tiptap/starter-kit": "/node_modules/@tiptap/starter-kit/dist/index.js",
+      "@tiptap/extension-link": "/node_modules/@tiptap/extension-link/dist/index.js",
+      "@tiptap/extension-placeholder": "/node_modules/@tiptap/extension-placeholder/dist/index.js"
+    }
+  }
+</script>
+
+<script type="module">
+  import { Editor } from '@tiptap/core';
+  import StarterKit from '@tiptap/starter-kit';
+  import Link from '@tiptap/extension-link';
+  import Placeholder from '@tiptap/extension-placeholder';
+
+  document.addEventListener('DOMContentLoaded', function() {
+    // Image previews
+    const mainInput = document.getElementById('mainImageUrl');
+    const mainPreview = document.getElementById('mainPreview');
+    
+    if (mainInput) {
+      mainInput.addEventListener('input', function() {
+        const value = this.value.trim();
+        if (value) {
+          mainPreview.innerHTML = `
+            <div class="relative inline-block">
+              <img src="${value}" class="w-24 h-24 object-cover rounded-lg border border-border" onerror="this.parentElement.innerHTML='<p class=\\'text-xs text-red-500\\'>Image not found</p>'" />
+            </div>
+          `;
+        } else {
+          mainPreview.innerHTML = '';
+        }
+      });
+    }
+    
+    const galleryInput = document.getElementById('galleryUrls');
+    const galleryPreview = document.getElementById('galleryPreview');
+    
+    if (galleryInput) {
+      galleryInput.addEventListener('input', function() {
+        const value = this.value.trim();
+        if (value) {
+          const urls = value.split(',').map(u => u.trim()).filter(u => u);
+          galleryPreview.innerHTML = urls.map(url => `
+            <div class="relative inline-block">
+              <img src="${url}" class="w-16 h-16 object-cover rounded-lg border border-border" onerror="this.style.display='none'" />
+            </div>
+          `).join('');
+        } else {
+          galleryPreview.innerHTML = '';
+        }
+      });
+    }
+    
+    // TipTap Editor
+    const hiddenInput = document.getElementById('detailDescriptionInput');
+    const editorContainer = document.getElementById('editor-container');
+    
+    if (!editorContainer || !hiddenInput) return;
+    
+    // Create editor instance
+    const editor = new Editor({
+      element: editorContainer,
+      extensions: [
+        StarterKit.configure({
+          bulletList: {
+            keepMarks: true,
+            keepAttributes: false,
+          },
+          orderedList: {
+            keepMarks: true,
+            keepAttributes: false,
+          },
+        }),
+        Link.configure({
+          openOnClick: false,
+          linkOnPaste: true,
+          protocols: ['https', 'http'],
+        }),
+        Placeholder.configure({
+          placeholder: 'Write your product description here...',
+        }),
+      ],
+      content: '',
+      editorProps: {
+        attributes: {
+          class: 'prose prose-sm max-w-none focus:outline-none min-h-[200px] p-4',
+        }
+      },
+      onUpdate: ({ editor }) => {
+        // Get HTML content and update hidden input
+        const html = editor.getHTML();
+        hiddenInput.value = html;
+      }
+    });
+    
+    // Make editor available globally for toolbar buttons
+    window.tiptapEditor = editor;
+    
+    // Toolbar buttons
+    document.querySelectorAll('[data-command]').forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const command = this.dataset.command;
+        
+        if (!editor) return;
+        
+        // Call the command directly
+        editor.chain().focus()[command]().run();
+      });
+    });
+    
+    // Link button with custom popup
+    document.getElementById('insertLinkBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      if (!editor) return;
+      
+      // Create custom popup
+      const overlay = document.createElement('div');
+      overlay.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
+      
+      const popup = document.createElement('div');
+      popup.className = 'bg-white rounded-xl p-6 max-w-md w-full shadow-2xl';
+      popup.innerHTML = `
+        <h3 class="text-lg font-semibold mb-4 text-text-heading">Insert Link</h3>
+        <input type="url" id="linkUrl" placeholder="https://example.com" class="w-full px-3 py-2 border border-border rounded-lg mb-3 focus:ring-2 focus:ring-brand focus:border-transparent" />
+        <input type="text" id="linkText" placeholder="Link Text (optional)" class="w-full px-3 py-2 border border-border rounded-lg mb-4 focus:ring-2 focus:ring-brand focus:border-transparent" />
+        <div class="flex gap-2 justify-end">
+          <button id="cancelLink" class="px-4 py-2 border border-border rounded-lg hover:bg-gray-50 transition-colors">Cancel</button>
+          <button id="confirmLink" class="px-4 py-2 bg-brand text-white rounded-lg hover:bg-brand/80 transition-colors font-medium">Insert</button>
+        </div>
+      `;
+      
+      overlay.appendChild(popup);
+      document.body.appendChild(overlay);
+      
+      const urlInput = popup.querySelector('#linkUrl');
+      const textInput = popup.querySelector('#linkText');
+      urlInput.focus();
+      
+      function insertLink() {
+        const url = urlInput.value.trim();
+        const text = textInput.value.trim();
+        
+        if (url) {
+          // If there's selected text, use it as link text
+          const { from, to } = editor.state.selection;
+          const selectedText = editor.state.doc.textBetween(from, to);
+          
+          if (selectedText && from !== to) {
+            // Replace selected text with link
+            editor.chain().focus().setLink({ href: url }).run();
+          } else if (text) {
+            // Insert custom text link
+            editor.chain().focus().insertContent(`<a href="${url}" style="color: #F59E0B;">${text}</a>`).run();
+          } else {
+            // Insert URL as link
+            editor.chain().focus().insertContent(`<a href="${url}" style="color: #F59E0B;">${url}</a>`).run();
+          }
+          
+          document.body.removeChild(overlay);
+        }
+      }
+      
+      popup.querySelector('#confirmLink').addEventListener('click', insertLink);
+      popup.querySelector('#cancelLink').addEventListener('click', function() {
+        document.body.removeChild(overlay);
+      });
+      
+      // Enter key to submit
+      urlInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') insertLink();
+      });
+      textInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') insertLink();
+      });
+      
+      overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) {
+          document.body.removeChild(overlay);
+        }
+      });
+    });
+    
+    // Auto-generate slug from product name
+    const productNameInput = document.getElementById('productName');
+    const productSlugInput = document.getElementById('productSlug');
+    
+    if (productNameInput && productSlugInput) {
+      productNameInput.addEventListener('input', function() {
+        if (!productSlugInput.dataset.userEdited) {
+          const slug = this.value
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-|-$/g, '');
+          productSlugInput.value = slug;
+        }
+      });
+      
+      productSlugInput.addEventListener('input', function() {
+        this.dataset.userEdited = 'true';
+      });
+    }
+  });
+</script>
+
+<!-- Styles for the editor -->
+<style is:global>
+  .ProseMirror {
+    outline: none;
+    min-height: 200px;
+    padding: 1rem;
+  }
+  
+  .ProseMirror ul {
+    list-style-type: disc !important;
+    padding-left: 1.5rem !important;
+    margin: 0.5rem 0 !important;
+  }
+  
+  .ProseMirror ol {
+    list-style-type: decimal !important;
+    padding-left: 1.5rem !important;
+    margin: 0.5rem 0 !important;
+  }
+  
+  .ProseMirror li {
+    margin: 0.25rem 0 !important;
+  }
+  
+  .ProseMirror a {
+    color: #F59E0B !important;
+    text-decoration: underline;
+  }
+  
+  .ProseMirror p {
+    margin: 0.5rem 0 !important;
+  }
+  
+  .ProseMirror .is-empty::before {
+    content: attr(data-placeholder);
+    float: left;
+    color: #9CA3AF;
+    pointer-events: none;
+    height: 0;
+  }
+</style>

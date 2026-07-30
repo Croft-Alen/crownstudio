@@ -1,0 +1,125 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import siteConfig from '../data/site-config.json';
+import aboutData from '../data/pages/about.json';
+
+const stats = siteConfig.stats;
+const about = aboutData;
+---
+
+<Layout title="About Us">
+  <Header />
+  
+  <main class="bg-transparent min-h-screen">
+    
+    <section class="py-20 bg-transparent">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div class="flex justify-center mb-4">
+          <span class="inline-block bg-brand text-white text-xs font-semibold tracking-[0.08em] uppercase px-4 py-1.5 rounded-full">
+            {about.hero?.tag || 'About Us'}
+          </span>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-bold text-text-heading mb-4 leading-tight">
+          {about.hero?.heading || 'Building the Future of Minecraft Servers'}
+        </h1>
+        <p class="text-base text-text-muted max-w-2xl mx-auto">
+          {about.hero?.subtext || ''}
+        </p>
+      </div>
+    </section>
+
+    <section class="py-12 bg-transparent">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        
+        <div class="relative">
+          
+          <div class="bg-card-bg rounded-t-2xl border border-border border-b-0 shadow-xl p-8 md:p-10 relative">
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 items-start">
+              <div class="lg:col-span-3">
+                <div class="flex items-center gap-3 mb-4">
+                  <svg class="w-6 h-6 text-brand flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"/>
+                  </svg>
+                  <h2 class="text-xl font-bold text-text-heading">{about.story?.heading || 'Our Story'}</h2>
+                </div>
+                {about.story?.paragraphs?.map((p: string) => (
+                  <p class="text-text-body text-sm mb-4 leading-relaxed">{p}</p>
+                ))}
+              </div>
+              <div class="lg:col-span-2">
+                <div class="rounded-xl p-6 text-center border border-brand/10 relative overflow-hidden bg-brand">
+                  <div class="relative z-10">
+                    <div class="text-5xl font-bold text-white mb-2">{about.story?.stat?.number || '100%'}</div>
+                    <p class="text-white font-semibold text-base">{about.story?.stat?.label || 'Client Satisfaction'}</p>
+                    <div class="w-12 h-px bg-white/30 mx-auto my-3"></div>
+                    <p class="text-sm text-white/80">{about.story?.stat?.subtext || 'Every configuration is built with care and precision'}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="relative h-14 bg-transparent">
+            <div class="absolute left-8 top-0 bottom-0 w-1.5 bg-brand"></div>
+            <div class="absolute right-8 top-0 bottom-0 w-1.5 bg-brand"></div>
+          </div>
+          
+          <div class="bg-card-bg rounded-b-2xl border border-border border-t-0 shadow-xl p-8 relative">
+            <div class="grid grid-cols-3 gap-4">
+              <div class="text-center">
+                <div class="text-2xl font-bold text-brand">{stats.servers}+</div>
+                <div class="text-text-muted text-xs">Servers Configured</div>
+              </div>
+              <div class="text-center border-x border-border">
+                <div class="text-2xl font-bold text-brand">{stats.clients}+</div>
+                <div class="text-text-muted text-xs">Happy Clients</div>
+              </div>
+              <div class="text-center">
+                <div class="text-2xl font-bold text-brand">{stats.resources}+</div>
+                <div class="text-text-muted text-xs">Resources Sold</div>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+        
+      </div>
+    </section>
+
+    <section class="py-16 bg-transparent">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-2xl font-bold text-text-heading mb-2">{about.team?.heading || 'Meet the Team'}</h2>
+          <p class="text-text-muted text-sm">{about.team?.subtext || 'The people behind CrownStudio'}</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {about.team?.members?.map((member: any) => (
+            <div class="bg-card-bg border border-border border-t-4 border-t-brand shadow-xl p-6 flex items-center gap-5 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+              {member.image ? (
+                <img 
+                  src={member.image} 
+                  alt={member.name}
+                  class="w-16 h-16 rounded-full object-cover shrink-0 border-2 border-brand"
+                />
+              ) : (
+                <div class="w-16 h-16 rounded-full bg-brand flex items-center justify-center text-white font-bold text-xl shrink-0">
+                  {member.initial || member.name?.charAt(0) || '?'}
+                </div>
+              )}
+              <div>
+                <h3 class="font-semibold text-text-heading text-base">{member.name}</h3>
+                <p class="text-brand text-sm font-medium">{member.role}</p>
+                <p class="text-text-muted text-sm mt-1">{member.bio}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+    
+  </main>
+  
+  <Footer />
+</Layout>

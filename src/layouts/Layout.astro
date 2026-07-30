@@ -1,0 +1,77 @@
+---
+export interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  pageType?: 'website' | 'product' | 'article';
+}
+
+const { 
+  title = "CrownStudio",
+  description = "Premium Minecraft configurations and server setups.",
+  image = "https://crownstudio.com/og-image.jpg",
+  pageType = "website"
+} = Astro.props;
+
+const siteName = "CrownStudio";
+const siteUrl = "https://crownstudio.com";
+
+const pageTitle = title ? `${title} | ${siteName}` : siteName;
+
+const currentPath = Astro.url.pathname;
+const isHome = currentPath === '/';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href={`${siteUrl}${Astro.url.pathname}`} />
+    
+    <meta property="og:type" content={pageType} />
+    <meta property="og:url" content={`${siteUrl}${Astro.url.pathname}`} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <meta property="og:site_name" content={siteName} />
+    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
+    <link rel="stylesheet" href="/src/styles/global.css" />
+  </head>
+  <body class="bg-page-bg text-text-body antialiased">
+    
+    <!-- Hero Background - Minimal visibility -->
+    {isHome && (
+      <div class="absolute top-0 left-0 right-0 h-[80vh] z-0 pointer-events-none">
+        <div class="absolute inset-0">
+          <img 
+            src="/images/hero-bg.webp" 
+            alt=""
+            class="w-full h-full object-cover opacity-40"
+          />
+          <div class="absolute inset-0 bg-page-bg/80"></div>
+          <div class="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-page-bg to-transparent"></div>
+        </div>
+      </div>
+    )}
+    
+    <div class="relative z-10 min-h-screen flex flex-col">
+      <slot />
+    </div>
+  </body>
+</html>

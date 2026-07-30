@@ -1,0 +1,377 @@
+---
+export const prerender = false;
+
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getProductBySlug, getRelatedProducts } from '../../data/products.js';
+
+const slug = Astro.params.slug;
+const product = getProductBySlug(slug);
+
+if (!product) {
+  return Astro.redirect('/products');
+}
+
+const relatedProducts = getRelatedProducts(product.slug, 3);
+
+// Build images array - main image first, then gallery
+const allImages = [];
+if (product.images?.main) {
+  allImages.push(product.images.main);
+}
+if (product.images?.gallery && product.images.gallery.length > 0) {
+  allImages.push(...product.images.gallery);
+}
+// If no images, use placeholder
+if (allImages.length === 0) {
+  allImages.push(`https://picsum.photos/seed/${product.slug}/800/450`);
+}
+
+const detailHtml = typeof product.detailDescription === 'string' 
+  ? product.detailDescription 
+  : '';
+
+const featuresList = product.features || [];
+const mainImage = allImages[0] || `https://picsum.photos/seed/${product.slug}/800/450`;
+const hasMultipleImages = allImages.length > 1;
+const totalImages = allImages.length;
+---
+
+<Layout title={product.name}>
+  <Header />
+  
+  <main class="bg-transparent min-h-screen">
+    <section class="pt-20 pb-16 bg-transparent">
+      <div class="max-w-7xl mx-auto px-0 sm:px-4 lg:px-6">
+        
+        <nav class="flex items-center gap-2 text-sm mb-6 px-4 sm:px-0">
+          <a href="/" class="text-text-body hover:text-brand transition-colors">Home</a>
+          <span class="text-text-muted/30">/</span>
+          <a href="/products" class="text-text-body hover:text-brand transition-colors">Products</a>
+          <span class="text-text-muted/30">/</span>
+          <span class="text-brand font-medium">{product.name}</span>
+        </nav>
+        
+        <div class="px-4 sm:px-0 mb-6">
+          <h1 class="text-3xl md:text-4xl font-bold text-text-heading mb-2">
+            {product.name}
+          </h1>
+          <p class="text-text-muted text-base max-w-2xl">
+            {product.description}
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <div class="lg:col-span-8 px-4 sm:px-0">
+            
+            <!-- Main Image with Navigation -->
+            <div class="relative aspect-[16/9] overflow-hidden bg-gray-100 mb-3 border border-border rounded-lg" id="image-container">
+              <img 
+                src={mainImage}
+                alt={product.name}
+                class="w-full h-full object-cover"
+                id="main-image"
+              />
+              
+              <!-- Navigation Arrows - Always visible if multiple images -->
+              {hasMultipleImages && (
+                <>
+                  <button id="prev-btn" class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 text-white hover:bg-black/80 flex items-center justify-center z-10 cursor-pointer">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <button id="next-btn" class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 text-white hover:bg-black/80 flex items-center justify-center z-10 cursor-pointer">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                  
+                  <!-- Image Counter -->
+                  <div class="absolute bottom-3 right-3 bg-black/60 text-white text-xs px-3 py-1 rounded-full z-10">
+                    <span id="current-image-index">1</span> / <span id="total-images">{totalImages}</span>
+                  </div>
+                </>
+              )}
+            </div>
+            
+            <!-- Thumbnail Gallery -->
+            {hasMultipleImages && (
+              <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 mb-4" id="thumbnail-gallery">
+                {allImages.map((img, index) => (
+                  <button 
+                    type="button"
+                    class={`thumbnail-btn aspect-square rounded-lg overflow-hidden border-2 cursor-pointer ${
+                      index === 0 ? 'border-brand' : 'border-border'
+                    }`}
+                    data-index={index}
+                    data-image={img}
+                  >
+                    <img 
+                      src={img} 
+                      alt={`${product.name} ${index + 1}`}
+                      class="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
+            
+            <!-- Product Details Content -->
+            {detailHtml ? (
+              <div class="bg-card-bg backdrop-blur-2xl rounded-lg border border-border shadow-2xl p-6 mt-6">
+                <div class="prose prose-sm max-w-none brand-content" set:html={detailHtml} />
+              </div>
+            ) : (
+              featuresList.length > 0 && (
+                <div class="bg-card-bg backdrop-blur-2xl rounded-lg border border-border shadow-2xl p-6 mt-6">
+                  <ul class="space-y-2.5 list-none">
+                    {featuresList.map((feature: string) => (
+                      <li class="text-text-body/70 text-base">{feature}</li>
+                    ))}
+                  </ul>
+                </div>
+              )
+            )}
+          </div>
+          
+          <!-- Sidebar -->
+          <div class="lg:col-span-4 px-4 sm:px-0">
+            
+            <div class="bg-card-bg backdrop-blur-2xl rounded-lg border border-border shadow-2xl p-6 mb-4 sticky top-24">
+              
+              <h2 class="text-xl font-bold text-text-heading mb-2">{product.name}</h2>
+              
+              <div class="text-3xl font-bold text-brand mb-4">
+                ${product.price}
+              </div>
+              
+              <div class="grid grid-cols-3 gap-2 mb-4">
+                <div class="bg-card-bg rounded-lg border border-border p-2 text-center">
+                  <span class="text-xs text-text-muted block mb-1">Rating</span>
+                  <div class="flex items-center justify-center gap-0.5">
+                    {[...Array(5)].map((_, i) => (
+                      <svg key={i} class={`w-3 h-3 ${i < Math.round(product.rating || 0) ? 'text-brand fill-brand' : 'text-border'}`} fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                      </svg>
+                    ))}
+                  </div>
+                </div>
+                <div class="bg-card-bg rounded-lg border border-border p-2 text-center">
+                  <span class="text-xs text-text-muted block mb-1">Reviews</span>
+                  <span class="text-sm font-semibold text-text-heading block">{product.reviews || 0}</span>
+                </div>
+                <div class="bg-card-bg rounded-lg border border-border p-2 text-center">
+                  <span class="text-xs text-text-muted block mb-1">Category</span>
+                  <span class="text-sm font-semibold text-text-heading block">{product.category}</span>
+                </div>
+              </div>
+              
+              <a 
+                href={product.buyLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center justify-center gap-2 bg-brand text-white font-semibold px-6 py-3 rounded-lg text-sm shadow-lg hover:shadow-xl w-full"
+              >
+                <svg class="w-4 h-4" viewBox="0 0 600 645" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M296.814 1.19919L11.4858 158.387C6.74356 160.999 6.79406 167.832 11.5744 170.374L164.069 251.468C166.14 252.569 168.631 252.529 170.664 251.36L296.713 178.948C298.815 177.74 301.402 177.741 303.504 178.949L429.488 251.371C431.521 252.54 434.013 252.581 436.084 251.48L588.656 170.368C593.437 167.826 593.487 160.993 588.745 158.38L303.391 1.19902C301.344 0.0712953 298.862 0.0713586 296.814 1.19919Z"/>
+                  <path d="M163.788 292.999L10.4639 211.488C5.92445 209.075 0.449304 212.364 0.449093 217.505L0.437866 490.454C0.437764 492.939 1.78927 495.226 3.96522 496.425L271.869 643.983C276.411 646.485 281.972 643.199 281.972 638.013V475.467C281.972 473.027 280.668 470.773 278.553 469.558L170.824 407.648C168.708 406.432 167.404 404.179 167.404 401.739V299.017C167.404 296.496 166.013 294.182 163.788 292.999Z"/>
+                  <path d="M436.421 292.999L589.745 211.488C594.284 209.075 599.759 212.364 599.76 217.505L599.771 490.454C599.771 492.939 598.419 495.226 596.243 496.425L328.34 643.983C323.798 646.485 318.236 643.199 318.236 638.013V475.467C318.236 473.027 319.541 470.773 321.656 469.558L429.385 407.648C431.5 406.432 432.805 404.179 432.805 401.739V299.017C432.805 296.496 434.195 294.182 436.421 292.999Z"/>
+                </svg>
+                Buy Now
+              </a>
+            </div>
+            
+            {relatedProducts && relatedProducts.length > 0 && (
+              <div class="mt-4">
+                <h4 class="text-sm font-semibold text-text-heading mb-2">Related Products</h4>
+                <div class="space-y-2">
+                  {relatedProducts.map((related: any) => (
+                    <a 
+                      href={`/products/${related.slug}`}
+                      class="group flex items-center gap-3 bg-card-bg rounded-lg border border-border shadow-md hover:shadow-lg p-3"
+                    >
+                      <div class="w-14 h-14 rounded-lg overflow-hidden bg-gray-100 shrink-0">
+                        <img 
+                          src={related.images?.main || `https://picsum.photos/seed/${related.slug}/100/100`} 
+                          alt={related.name}
+                          class="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <h5 class="font-medium text-text-heading text-sm truncate group-hover:text-brand">
+                          {related.name}
+                        </h5>
+                        <div class="flex items-center justify-between mt-0.5">
+                          <span class="text-sm font-bold text-text-heading">${related.price}</span>
+                        </div>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+          
+        </div>
+        
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>
+
+<style is:global>
+  .brand-content a {
+    color: #F59E0B !important;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  
+  .brand-content a:hover {
+    color: #D97706 !important;
+  }
+  
+  .brand-content ul {
+    list-style-type: disc !important;
+    padding-left: 1.5rem !important;
+    margin: 0.5rem 0 !important;
+  }
+  
+  .brand-content ol {
+    list-style-type: decimal !important;
+    padding-left: 1.5rem !important;
+    margin: 0.5rem 0 !important;
+  }
+  
+  .brand-content li {
+    margin: 0.25rem 0 !important;
+  }
+  
+  .brand-content p {
+    margin: 0.5rem 0 !important;
+  }
+  
+  .brand-content br {
+    display: block !important;
+    margin: 0.25rem 0 !important;
+  }
+</style>
+
+<script>
+  (function() {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initGallery);
+    } else {
+      initGallery();
+    }
+    
+    function initGallery() {
+      const mainImage = document.getElementById('main-image');
+      const prevBtn = document.getElementById('prev-btn');
+      const nextBtn = document.getElementById('next-btn');
+      const thumbnailBtns = document.querySelectorAll('.thumbnail-btn');
+      const currentIndexDisplay = document.getElementById('current-image-index');
+      
+      if (!mainImage) {
+        console.error('Main image not found');
+        return;
+      }
+      
+      const allImages = [];
+      thumbnailBtns.forEach(btn => {
+        const img = btn.getAttribute('data-image');
+        if (img) {
+          allImages.push(img);
+        }
+      });
+      
+      if (allImages.length === 0) {
+        allImages.push(mainImage.src);
+      }
+      
+      let currentIndex = 0;
+      const totalImages = allImages.length;
+      
+      console.log('Gallery initialized with', totalImages, 'images');
+      
+      function updateImage(index) {
+        currentIndex = (index + totalImages) % totalImages;
+        
+        if (allImages[currentIndex]) {
+          mainImage.src = allImages[currentIndex];
+        }
+        
+        // Update thumbnail active state
+        thumbnailBtns.forEach((btn, i) => {
+          btn.classList.remove('border-brand');
+          btn.classList.add('border-border');
+          if (i === currentIndex) {
+            btn.classList.add('border-brand');
+            btn.classList.remove('border-border');
+          }
+        });
+        
+        if (currentIndexDisplay) {
+          currentIndexDisplay.textContent = currentIndex + 1;
+        }
+      }
+      
+      if (prevBtn) {
+        prevBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('Prev clicked, currentIndex:', currentIndex);
+          updateImage(currentIndex - 1);
+        });
+      }
+      
+      if (nextBtn) {
+        nextBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('Next clicked, currentIndex:', currentIndex);
+          updateImage(currentIndex + 1);
+        });
+      }
+      
+      thumbnailBtns.forEach((btn) => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          const index = parseInt(this.getAttribute('data-index'));
+          console.log('Thumbnail clicked, index:', index);
+          if (!isNaN(index) && index !== currentIndex) {
+            updateImage(index);
+          }
+        });
+      });
+      
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          updateImage(currentIndex - 1);
+        }
+        if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          updateImage(currentIndex + 1);
+        }
+      });
+      
+      if (thumbnailBtns.length > 0) {
+        thumbnailBtns.forEach((btn, i) => {
+          btn.classList.remove('border-brand');
+          btn.classList.add('border-border');
+          if (i === 0) {
+            btn.classList.add('border-brand');
+            btn.classList.remove('border-border');
+          }
+        });
+      }
+    }
+  })();
+</script>

@@ -1,0 +1,155 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import siteConfig from '../../data/site-config.json';
+
+const session = Astro.cookies.get('admin_session');
+if (!session || session.value !== 'authenticated') {
+  return Astro.redirect('/admin/login');
+}
+---
+
+<AdminLayout>
+  <div class="max-w-3xl">
+    
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-text-heading">Site Settings</h1>
+      <p class="text-text-muted text-sm mt-1">Manage your site configuration</p>
+    </div>
+
+    <form method="POST" action="/api/settings/update" enctype="multipart/form-data">
+      
+      <div class="space-y-5">
+        
+        <!-- General -->
+        <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+          <h2 class="text-base font-semibold text-text-heading mb-4">General</h2>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Site Name</label>
+              <input 
+                type="text" 
+                name="siteName" 
+                value={siteConfig.siteName}
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Site Description</label>
+              <textarea 
+                name="siteDescription" 
+                rows="2"
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              >{siteConfig.siteDescription}</textarea>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Logo Image Path</label>
+              {siteConfig.logo && (
+                <div class="mb-2">
+                  <img src={siteConfig.logo} alt="Current logo" class="w-14 h-14 object-cover rounded-lg border border-border" />
+                  <p class="text-xs text-text-muted mt-1">Current logo</p>
+                </div>
+              )}
+              <input 
+                type="text" 
+                name="logo" 
+                value={siteConfig.logo || ''}
+                placeholder="/images/logo.png"
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+              <div class="text-xs text-text-muted p-3 bg-white/50 rounded-lg border border-border/60 mt-2">
+                <p>Upload logo to: <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs">public/images/logo.png</code></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+          <h2 class="text-base font-semibold text-text-heading mb-4">Contact</h2>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Contact Email</label>
+              <input 
+                type="email" 
+                name="contactEmail" 
+                value={siteConfig.contact.email}
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Discord Username</label>
+              <input 
+                type="text" 
+                name="discord" 
+                value={siteConfig.contact.discord}
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Response Time</label>
+              <input 
+                type="text" 
+                name="responseTime" 
+                value={siteConfig.contact.responseTime || 'Within 24 hours'}
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Social Links -->
+        <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+          <h2 class="text-base font-semibold text-text-heading mb-4">Social Links</h2>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Discord Server URL</label>
+              <input 
+                type="url" 
+                name="discordUrl" 
+                value={siteConfig.socialLinks?.discord || ''}
+                placeholder="https://discord.gg/..."
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">YouTube URL</label>
+              <input 
+                type="url" 
+                name="youtube" 
+                value={siteConfig.socialLinks?.youtube || ''}
+                placeholder="https://youtube.com/..."
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">BuiltByBit URL</label>
+              <input 
+                type="url" 
+                name="builtbybit" 
+                value={siteConfig.socialLinks?.builtbybit || ''}
+                placeholder="https://builtbybit.com/..."
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="flex gap-3 pt-5 mt-2 border-t border-border">
+        <button 
+          type="submit" 
+          class="bg-brand text-white px-6 py-2 rounded-lg hover:bg-brand/80 transition-colors text-sm font-medium"
+        >
+          Save Settings
+        </button>
+        <a 
+          href="/admin" 
+          class="px-6 py-2 border border-border rounded-lg hover:bg-brand/10 transition-colors text-text-body text-sm font-medium"
+        >
+          Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</AdminLayout>

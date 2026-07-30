@@ -1,0 +1,82 @@
+---
+const error = Astro.url.searchParams.get('error');
+const session = Astro.cookies.get('admin_session');
+
+if (session && session.value === 'authenticated') {
+  return Astro.redirect('/admin');
+}
+
+import siteConfig from '../../data/site-config.json';
+const logo = siteConfig.logo || '/images/logo.png';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login - CrownStudio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/styles/global.css" />
+  </head>
+  <body class="bg-page-bg font-sans min-h-screen flex items-center justify-center">
+    
+    <div class="w-full max-w-sm mx-4">
+      
+      <div class="bg-card-bg rounded-2xl border border-border shadow-xl p-8">
+        
+        <div class="text-center mb-8">
+          {logo && (
+            <img src={logo} alt="CrownStudio" class="h-10 mx-auto" />
+          )}
+          <h1 class="text-xl font-bold text-text-heading mt-4">Login</h1>
+          <p class="text-text-muted text-sm mt-1">Login to your admin panel</p>
+        </div>
+        
+        {error && (
+          <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-2.5 rounded-xl text-sm mb-5 flex items-center gap-2">
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Invalid password. Please try again.
+          </div>
+        )}
+        
+        <form method="POST" action="/api/admin/login" class="space-y-4">
+          <div>
+            <label for="password" class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1.5">Password</label>
+            <div class="relative">
+              <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                required
+                placeholder="Enter your password"
+                class="w-full px-4 py-3 pr-11 border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body text-sm transition-all duration-300"
+                autofocus
+              />
+              <svg class="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+          </div>
+          
+          <button 
+            type="submit"
+            class="w-full bg-brand text-white font-semibold text-sm px-6 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:bg-brand/90 flex items-center justify-center gap-2"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+            </svg>
+            Login
+          </button>
+        </form>
+        
+      </div>
+      
+    </div>
+    
+  </body>
+</html>

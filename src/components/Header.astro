@@ -1,0 +1,156 @@
+---
+import siteConfig from '../data/site-config.json';
+import categoriesData from '../data/categories.json';
+
+const navLinks = siteConfig.navLinks;
+const logo = siteConfig.logo;
+const siteName = siteConfig.siteName;
+const ctaButton = siteConfig.ctaButton;
+const categories = categoriesData || [];
+const socialLinks = siteConfig.socialLinks || {};
+---
+
+<header class="sticky top-4 z-50 mx-4 rounded-2xl backdrop-blur-2xl bg-white/80 border border-white/20 shadow-xl">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-14 md:h-16">
+      
+      <a href="/" class="flex items-center gap-2 shrink-0">
+        <img src={logo} alt={siteName} class="w-10 h-10" />
+        <span class="text-xl font-bold text-text-heading">
+          {siteName}
+        </span>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-8">
+        {navLinks.map((link) => {
+          if (link.name === 'Shop') {
+            return (
+              <div class="relative group">
+                <button class="text-text-body font-medium text-sm transition-colors duration-200 hover:text-brand flex items-center gap-1 cursor-pointer">
+                  Shop
+                  <svg class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 9l6 6 6-6"/>
+                  </svg>
+                </button>
+                <div class="absolute left-0 top-full mt-2 w-48 backdrop-blur-3xl bg-white/95 rounded-xl shadow-2xl py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 border border-white/20">
+                  {categories.map((cat) => (
+                    <a 
+                      href={`/products?category=${cat.slug}`}
+                      class="block px-4 py-2 text-sm text-text-body hover:bg-brand/10 hover:text-brand transition-colors duration-200"
+                    >
+                      {cat.name}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            );
+          }
+          return (
+            <a 
+              href={link.url} 
+              class="text-text-body font-medium text-sm transition-colors duration-200 hover:text-brand"
+            >
+              {link.name}
+            </a>
+          );
+        })}
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a 
+          href={socialLinks.builtbybit || ctaButton.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="hidden md:inline-flex items-center gap-2 bg-brand text-white font-semibold text-sm px-5 py-2 rounded-full transition-all duration-200 shadow-md shrink-0"
+        >
+          <svg class="w-4 h-4" viewBox="0 0 600 645" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M296.814 1.19919L11.4858 158.387C6.74356 160.999 6.79406 167.832 11.5744 170.374L164.069 251.468C166.14 252.569 168.631 252.529 170.664 251.36L296.713 178.948C298.815 177.74 301.402 177.741 303.504 178.949L429.488 251.371C431.521 252.54 434.013 252.581 436.084 251.48L588.656 170.368C593.437 167.826 593.487 160.993 588.745 158.38L303.391 1.19902C301.344 0.0712953 298.862 0.0713586 296.814 1.19919Z"/>
+            <path d="M163.788 292.999L10.4639 211.488C5.92445 209.075 0.449304 212.364 0.449093 217.505L0.437866 490.454C0.437764 492.939 1.78927 495.226 3.96522 496.425L271.869 643.983C276.411 646.485 281.972 643.199 281.972 638.013V475.467C281.972 473.027 280.668 470.773 278.553 469.558L170.824 407.648C168.708 406.432 167.404 404.179 167.404 401.739V299.017C167.404 296.496 166.013 294.182 163.788 292.999Z"/>
+            <path d="M436.421 292.999L589.745 211.488C594.284 209.075 599.759 212.364 599.76 217.505L599.771 490.454C599.771 492.939 598.419 495.226 596.243 496.425L328.34 643.983C323.798 646.485 318.236 643.199 318.236 638.013V475.467C318.236 473.027 319.541 470.773 321.656 469.558L429.385 407.648C431.5 406.432 432.805 404.179 432.805 401.739V299.017C432.805 296.496 434.195 294.182 436.421 292.999Z"/>
+          </svg>
+          {ctaButton.text}
+        </a>
+
+        <a 
+          href={socialLinks.discord || '#'}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-[#5865F2] transition-colors duration-200 shrink-0"
+          aria-label="Discord"
+        >
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+          </svg>
+        </a>
+
+        <button id="menu-toggle" class="md:hidden text-text-body/60 hover:text-brand transition-colors duration-200 shrink-0 ml-1" aria-label="Toggle menu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobile-menu" class="hidden md:hidden py-6 backdrop-blur-3xl bg-white/95 rounded-xl border border-white/20 mt-2 shadow-2xl">
+      <nav class="flex flex-col items-center gap-4">
+        {navLinks.map((link) => {
+          if (link.name === 'Shop') {
+            return (
+              <div class="w-full text-center">
+                <div class="text-text-body font-medium text-base mb-2 flex items-center justify-center gap-1">
+                  Shop
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 9l6 6 6-6"/>
+                  </svg>
+                </div>
+                <div class="flex flex-col items-center gap-2">
+                  {categories.map((cat) => (
+                    <a 
+                      href={`/products?category=${cat.slug}`}
+                      class="text-text-body/60 hover:text-brand transition-colors duration-200 text-sm text-center w-full"
+                    >
+                      {cat.name}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            );
+          }
+          return (
+            <a 
+              href={link.url} 
+              class="text-text-body/60 font-medium text-base transition-colors duration-200 hover:text-brand text-center w-full"
+            >
+              {link.name}
+            </a>
+          );
+        })}
+        <div class="w-full border-t border-white/20 pt-4 mt-2"></div>
+        <a 
+          href={socialLinks.builtbybit || ctaButton.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center gap-2 bg-brand text-white font-semibold px-6 py-2.5 rounded-full text-center transition-colors duration-200 w-full max-w-xs shadow-md"
+        >
+          <svg class="w-4 h-4" viewBox="0 0 600 645" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path d="M296.814 1.19919L11.4858 158.387C6.74356 160.999 6.79406 167.832 11.5744 170.374L164.069 251.468C166.14 252.569 168.631 252.529 170.664 251.36L296.713 178.948C298.815 177.74 301.402 177.741 303.504 178.949L429.488 251.371C431.521 252.54 434.013 252.581 436.084 251.48L588.656 170.368C593.437 167.826 593.487 160.993 588.745 158.38L303.391 1.19902C301.344 0.0712953 298.862 0.0713586 296.814 1.19919Z"/>
+            <path d="M163.788 292.999L10.4639 211.488C5.92445 209.075 0.449304 212.364 0.449093 217.505L0.437866 490.454C0.437764 492.939 1.78927 495.226 3.96522 496.425L271.869 643.983C276.411 646.485 281.972 643.199 281.972 638.013V475.467C281.972 473.027 280.668 470.773 278.553 469.558L170.824 407.648C168.708 406.432 167.404 404.179 167.404 401.739V299.017C167.404 296.496 166.013 294.182 163.788 292.999Z"/>
+            <path d="M436.421 292.999L589.745 211.488C594.284 209.075 599.759 212.364 599.76 217.505L599.771 490.454C599.771 492.939 598.419 495.226 596.243 496.425L328.34 643.983C323.798 646.485 318.236 643.199 318.236 638.013V475.467C318.236 473.027 319.541 470.773 321.656 469.558L429.385 407.648C431.5 406.432 432.805 404.179 432.805 401.739V299.017C432.805 296.496 434.195 294.182 436.421 292.999Z"/>
+          </svg>
+          {ctaButton.text}
+        </a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  
+  if (toggle && menu) {
+    toggle.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+  }
+</script>

@@ -1,0 +1,150 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import categoriesData from '../../../data/categories.json';
+
+const session = Astro.cookies.get('admin_session');
+if (!session || session.value !== 'authenticated') {
+  return Astro.redirect('/admin/login');
+}
+
+const slug = Astro.params.slug;
+const category = categoriesData.find(c => c.slug === slug);
+
+if (!category) {
+  return Astro.redirect('/admin/categories');
+}
+---
+
+<AdminLayout>
+  <div class="max-w-3xl">
+    
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-text-heading">Edit Category</h1>
+      <p class="text-text-muted text-sm mt-1">Update category details</p>
+    </div>
+
+    <form method="POST" action={`/api/categories/update/${category.slug}`} enctype="multipart/form-data">
+      
+      <div class="space-y-5">
+        
+        <!-- Basic Information -->
+        <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+          <h2 class="text-base font-semibold text-text-heading mb-4">Basic Information</h2>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Category Name *</label>
+              <input 
+                type="text" 
+                name="name" 
+                value={category.name}
+                required
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Slug *</label>
+              <input 
+                type="text" 
+                name="slug" 
+                value={category.slug}
+                required
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+              <p class="text-xs text-text-muted mt-1">URL-friendly name (lowercase, hyphens instead of spaces)</p>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Description</label>
+              <textarea 
+                name="description" 
+                rows="3"
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              >{category.description}</textarea>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Display Order</label>
+              <input 
+                type="number" 
+                name="order" 
+                min="0"
+                value={category.order || 0}
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                placeholder="0"
+              />
+              <p class="text-xs text-text-muted mt-1">Lower numbers appear first</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Image -->
+        <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+          <h2 class="text-base font-semibold text-text-heading mb-4">Category Image</h2>
+          <div class="space-y-3">
+            <div>
+              {category.image && category.image !== `/images/categories/${category.slug}.jpg` && (
+                <div class="mb-3">
+                  <img src={category.image} alt="Current" class="w-32 h-20 object-cover rounded-lg border border-border" />
+                  <p class="text-xs text-text-muted mt-1">Current image</p>
+                </div>
+              )}
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Image Path</label>
+              <input 
+                type="text" 
+                name="imageUrl" 
+                id="imageUrl"
+                value={category.image || ''}
+                placeholder="/uploads/categories/survival/banner.jpg"
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+              <div id="imagePreview" class="mt-2"></div>
+              <div class="text-xs text-text-muted p-3 bg-white/50 rounded-lg border border-border/60 mt-2">
+                <p>Upload images to: <code class="bg-gray-100 px-1.5 py-0.5 rounded text-xs">public/uploads/categories/[slug]/</code></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="flex gap-3 pt-5 mt-2 border-t border-border">
+        <button 
+          type="submit" 
+          class="bg-brand text-white px-6 py-2 rounded-lg hover:bg-brand/80 transition-colors text-sm font-medium"
+        >
+          Update Category
+        </button>
+        <a 
+          href="/admin/categories" 
+          class="px-6 py-2 border border-border rounded-lg hover:bg-brand/10 transition-colors text-text-body text-sm font-medium"
+        >
+          Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</AdminLayout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const imageInput = document.getElementById('imageUrl');
+    const preview = document.getElementById('imagePreview');
+    
+    if (imageInput) {
+      imageInput.addEventListener('input', function() {
+        const value = this.value.trim();
+        if (value) {
+          preview.innerHTML = `
+            <div class="relative inline-block">
+              <img src="${value}" class="w-32 h-20 object-cover rounded-lg border border-border" onerror="this.parentElement.innerHTML='<p class=\\'text-xs text-red-500\\'>Image not found</p>'" />
+            </div>
+          `;
+        } else {
+          preview.innerHTML = '';
+        }
+      });
+      
+      if (imageInput.value) {
+        imageInput.dispatchEvent(new Event('input'));
+      }
+    }
+  });
+</script>

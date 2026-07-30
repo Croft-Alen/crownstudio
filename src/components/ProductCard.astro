@@ -1,0 +1,61 @@
+---
+export interface Props {
+  product: {
+    id: number;
+    slug: string;
+    name: string;
+    price: number;
+    rating: number;
+    reviews: number;
+    category: string;
+    images: { main: string };
+    buyLink: string;
+    tags?: string[];
+  };
+}
+
+const { product } = Astro.props;
+
+const mainImage = product.images?.main 
+  ? product.images.main 
+  : `https://picsum.photos/seed/${product.slug}/600/400`;
+---
+
+<a 
+  href={`/products/${product.slug}`}
+  class="group bg-card-bg rounded-lg border border-border shadow-md hover:shadow-xl overflow-hidden transition-all duration-300 block"
+>
+  <div class="relative aspect-[5/3] overflow-hidden bg-gray-100">
+    <img 
+      src={mainImage} 
+      alt={product.name}
+      class="w-full h-full object-cover"
+      loading="lazy"
+    />
+  </div>
+
+  <div class="p-4">
+    <h3 class="font-semibold text-text-heading text-base line-clamp-1 group-hover:text-brand transition-colors">
+      {product.name}
+    </h3>
+
+    <div class="flex items-center justify-between mt-2">
+      <span class="text-lg font-bold text-text-heading">${product.price}</span>
+      <div class="flex items-center gap-1">
+        <span class="text-brand text-sm">★</span>
+        <span class="text-sm font-medium text-text-heading">{product.rating || 0}</span>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap gap-1.5 mt-3">
+      <span class="bg-brand/10 text-brand text-xs font-medium px-2.5 py-0.5 rounded">
+        {product.category}
+      </span>
+      {product.tags && product.tags.slice(0, 2).map((tag: string) => (
+        <span class="bg-brand/10 text-brand text-xs font-medium px-2.5 py-0.5 rounded">
+          {tag}
+        </span>
+      ))}
+    </div>
+  </div>
+</a>

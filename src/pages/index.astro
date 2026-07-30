@@ -1,0 +1,26 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Hero from '../components/Hero.astro';
+import Marquee from '../components/Marquee.astro';
+import Features from '../components/Features.astro';
+import CategoryGrid from '../components/CategoryGrid.astro';
+import Reviews from '../components/Reviews.astro';
+import CTA from '../components/CTA.astro';
+---
+
+<Layout title="Home" showHeroBg={true}>
+  <Header />
+  
+  <main>
+    <Hero />
+    <Marquee />
+    <Features />
+    <CategoryGrid />
+    <Reviews />
+    <CTA />
+  </main>
+  
+  <Footer />
+</Layout>

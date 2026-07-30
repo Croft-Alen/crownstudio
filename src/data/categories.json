@@ -1,0 +1,26 @@
+[
+  {
+    "id": 2,
+    "name": "Config",
+    "slug": "config",
+    "description": "Advanced configuration files for plugins",
+    "image": "/images/",
+    "order": 0
+  },
+  {
+    "id": 3,
+    "name": "Plugin",
+    "slug": "plugin",
+    "description": "Custom plugins and addons for your server",
+    "image": "/images/",
+    "order": 0
+  },
+  {
+    "id": 5,
+    "name": "Setup",
+    "slug": "setup",
+    "description": "Best server setups",
+    "image": "/uploads/categories/setup/spawn1.webp",
+    "order": 0
+  }
+]

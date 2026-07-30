@@ -1,0 +1,205 @@
+---
+import { getPageData } from '../data/pages.js';
+
+const pageData = getPageData('home');
+const reviewsData = pageData.reviews;
+const allReviews = reviewsData.reviews;
+---
+
+<section class="py-20 bg-transparent overflow-hidden">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <div class="text-center mb-16">
+      <div class="flex justify-center mb-4">
+        <span class="inline-block bg-brand text-white text-xs font-semibold tracking-[0.08em] uppercase px-4 py-1.5 rounded-full">
+          {reviewsData.tag}
+        </span>
+      </div>
+      <h2 class="text-3xl font-bold text-text-heading mb-3">{reviewsData.heading}</h2>
+      <p class="text-text-muted text-base max-w-2xl mx-auto">{reviewsData.subtext}</p>
+    </div>
+    
+    <div class="relative h-[600px] overflow-visible px-4 py-16 -my-12" style="mask-image: linear-gradient(to bottom, transparent 0%, black 10%, black 90%, transparent 100%);">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 h-full items-start">
+        
+        <div class="flex flex-col gap-8 h-full overflow-visible">
+          <div class="flex flex-col gap-8 animate-scroll-up">
+            {[...allReviews, ...allReviews, ...allReviews].map((review: any, index: number) => (
+              <div class="review-card w-full flex-shrink-0 rounded-2xl p-6 bg-card-bg border border-border shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                <div class="flex items-center gap-3 mb-3">
+                  {review.image ? (
+                    <img 
+                      src={review.image} 
+                      alt={review.name}
+                      class="w-10 h-10 rounded-full object-cover border-2 border-brand"
+                    />
+                  ) : (
+                    <div class="w-10 h-10 rounded-full bg-brand flex items-center justify-center text-white font-bold text-sm">
+                      {review.initial}
+                    </div>
+                  )}
+                  <div>
+                    <div class="font-semibold text-sm text-text-heading">{review.name}</div>
+                    <div class="text-xs text-text-muted">{review.role}</div>
+                  </div>
+                </div>
+                <div class="flex gap-1 mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#00b67a">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                  ))}
+                </div>
+                <p class="text-sm text-text-body/70 leading-relaxed line-clamp-2 whitespace-normal break-words">"{review.text}"</p>
+                <div class="text-[#00b67a] text-xs mt-3">
+                  <svg class="w-3 h-3 inline mr-1" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                  </svg>
+                  Verified
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        <div class="flex flex-col gap-8 h-full overflow-visible">
+          <div class="flex flex-col gap-8 animate-scroll-down">
+            {[...allReviews, ...allReviews, ...allReviews].map((review: any, index: number) => (
+              <div class="review-card w-full flex-shrink-0 rounded-2xl p-6 bg-card-bg border border-border shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                <div class="flex items-center gap-3 mb-3">
+                  {review.image ? (
+                    <img 
+                      src={review.image} 
+                      alt={review.name}
+                      class="w-10 h-10 rounded-full object-cover border-2 border-brand"
+                    />
+                  ) : (
+                    <div class="w-10 h-10 rounded-full bg-brand flex items-center justify-center text-white font-bold text-sm">
+                      {review.initial}
+                    </div>
+                  )}
+                  <div>
+                    <div class="font-semibold text-sm text-text-heading">{review.name}</div>
+                    <div class="text-xs text-text-muted">{review.role}</div>
+                  </div>
+                </div>
+                <div class="flex gap-1 mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#00b67a">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                  ))}
+                </div>
+                <p class="text-sm text-text-body/70 leading-relaxed line-clamp-2 whitespace-normal break-words">"{review.text}"</p>
+                <div class="text-[#00b67a] text-xs mt-3">
+                  <svg class="w-3 h-3 inline mr-1" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                  </svg>
+                  Verified
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        <div class="flex flex-col gap-8 h-full overflow-visible">
+          <div class="flex flex-col gap-8 animate-scroll-up" style="animation-duration: 70s;">
+            {[...allReviews, ...allReviews, ...allReviews].map((review: any, index: number) => (
+              <div class="review-card w-full flex-shrink-0 rounded-2xl p-6 bg-card-bg border border-border shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                <div class="flex items-center gap-3 mb-3">
+                  {review.image ? (
+                    <img 
+                      src={review.image} 
+                      alt={review.name}
+                      class="w-10 h-10 rounded-full object-cover border-2 border-brand"
+                    />
+                  ) : (
+                    <div class="w-10 h-10 rounded-full bg-brand flex items-center justify-center text-white font-bold text-sm">
+                      {review.initial}
+                    </div>
+                  )}
+                  <div>
+                    <div class="font-semibold text-sm text-text-heading">{review.name}</div>
+                    <div class="text-xs text-text-muted">{review.role}</div>
+                  </div>
+                </div>
+                <div class="flex gap-1 mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="#00b67a">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                  ))}
+                </div>
+                <p class="text-sm text-text-body/70 leading-relaxed line-clamp-2 whitespace-normal break-words">"{review.text}"</p>
+                <div class="text-[#00b67a] text-xs mt-3">
+                  <svg class="w-3 h-3 inline mr-1" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                  </svg>
+                  Verified
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .animate-scroll-up {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    animation: scrollUp 80s linear infinite;
+    width: 100%;
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+  
+  .animate-scroll-down {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    animation: scrollDown 80s linear infinite;
+    width: 100%;
+    will-change: transform;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+  }
+  
+  @keyframes scrollUp {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(-50%);
+    }
+  }
+  
+  @keyframes scrollDown {
+    0% {
+      transform: translateY(-50%);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .review-card {
+    border-radius: 16px;
+    overflow: hidden;
+    backface-visibility: hidden;
+    transform: translateZ(0);
+    will-change: transform;
+  }
+</style>

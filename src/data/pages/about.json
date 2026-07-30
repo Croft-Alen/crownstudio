@@ -1,0 +1,39 @@
+{
+  "hero": {
+    "tag": "About Us",
+    "heading": "Building the Future of Minecraft Servers",
+    "subtext": "We're passionate about creating premium Minecraft configurations that help server owners build thriving communities."
+  },
+  "story": {
+    "heading": "Our Story",
+    "paragraphs": [
+      "CrownStudio was founded with a simple mission: to deliver high-performance Minecraft server configurations that enhance gameplay and create unforgettable experiences.",
+      "With years of experience in Minecraft server management, we've helped hundreds of server owners—from small private servers to large networks with thousands of players."
+    ],
+    "stat": {
+      "number": "100%",
+      "label": "Client Satisfaction",
+      "subtext": "Every configuration is built with care and precision"
+    }
+  },
+  "team": {
+    "heading": "Meet the Team",
+    "subtext": "The people behind CrownStudio",
+    "members": [
+      {
+        "name": "Crown",
+        "role": "Founder & Lead Developer",
+        "initial": "C",
+        "bio": "Passionate about Minecraft server optimization and plugin development.",
+        "image": ""
+      },
+      {
+        "name": "Alif",
+        "role": "Configuration Specialist",
+        "initial": "S",
+        "bio": "Expert in crafting custom configurations and plugin integrations.",
+        "image": ""
+      }
+    ]
+  }
+}

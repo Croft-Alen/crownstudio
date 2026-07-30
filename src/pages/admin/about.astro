@@ -1,0 +1,194 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import aboutData from '../../data/pages/about.json';
+
+const session = Astro.cookies.get('admin_session');
+if (!session || session.value !== 'authenticated') {
+  return Astro.redirect('/admin/login');
+}
+---
+
+<AdminLayout>
+  <div class="max-w-4xl">
+    
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-text-heading">About Page</h1>
+      <p class="text-text-muted text-sm mt-1">Manage your about page content</p>
+    </div>
+
+    <form method="POST" action="/api/about/update">
+      
+      <div class="space-y-5">
+        
+        <!-- Hero Section -->
+        <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+          <h2 class="text-base font-semibold text-text-heading mb-4">Hero Section</h2>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Tag</label>
+              <input 
+                type="text" 
+                name="heroTag" 
+                value={aboutData.hero?.tag || 'About Us'}
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Heading</label>
+              <input 
+                type="text" 
+                name="heroHeading" 
+                value={aboutData.hero?.heading || ''}
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Subtext</label>
+              <textarea 
+                name="heroSubtext" 
+                rows="2"
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              >{aboutData.hero?.subtext || ''}</textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Story Section -->
+        <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+          <h2 class="text-base font-semibold text-text-heading mb-4">Story Section</h2>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Heading</label>
+              <input 
+                type="text" 
+                name="storyHeading" 
+                value={aboutData.story?.heading || 'Our Story'}
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Paragraph 1</label>
+              <textarea 
+                name="storyParagraph1" 
+                rows="3"
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              >{aboutData.story?.paragraphs?.[0] || ''}</textarea>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Paragraph 2</label>
+              <textarea 
+                name="storyParagraph2" 
+                rows="3"
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              >{aboutData.story?.paragraphs?.[1] || ''}</textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Story Stat -->
+        <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+          <h2 class="text-base font-semibold text-text-heading mb-4">Story Stat</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Number</label>
+              <input 
+                type="text" 
+                name="statNumber" 
+                value={aboutData.story?.stat?.number || '100%'}
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Label</label>
+              <input 
+                type="text" 
+                name="statLabel" 
+                value={aboutData.story?.stat?.label || 'Client Satisfaction'}
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-text-muted uppercase tracking-wider mb-1">Subtext</label>
+              <input 
+                type="text" 
+                name="statSubtext" 
+                value={aboutData.story?.stat?.subtext || ''}
+                class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Members -->
+        <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+          <h2 class="text-base font-semibold text-text-heading mb-4">Team Members</h2>
+          <p class="text-xs text-text-muted mb-4">Add up to 4 team members</p>
+          <div class="space-y-4">
+            {[0, 1, 2, 3].map((i) => {
+              const member = aboutData.team?.members?.[i] || { name: '', role: '', initial: '', bio: '', image: '' };
+              return (
+                <div key={i} class="grid grid-cols-1 md:grid-cols-2 gap-3 p-3 bg-white/30 rounded-lg border border-border/60">
+                  <input 
+                    type="text" 
+                    name={`teamName${i}`} 
+                    value={member.name || ''}
+                    placeholder="Name"
+                    class="px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                  />
+                  <input 
+                    type="text" 
+                    name={`teamRole${i}`} 
+                    value={member.role || ''}
+                    placeholder="Role"
+                    class="px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                  />
+                  <input 
+                    type="text" 
+                    name={`teamInitial${i}`} 
+                    value={member.initial || ''}
+                    placeholder="Initial (e.g. J)"
+                    class="px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                    maxlength="2"
+                  />
+                  <input 
+                    type="text" 
+                    name={`teamBio${i}`} 
+                    value={member.bio || ''}
+                    placeholder="Bio"
+                    class="px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                  />
+                  <div class="md:col-span-2">
+                    <label class="block text-xs text-text-muted mb-1">Image Path</label>
+                    <input 
+                      type="text" 
+                      name={`teamImage${i}`} 
+                      value={member.image || ''}
+                      placeholder="/images/team/name.jpg"
+                      class="w-full px-3.5 py-2 text-sm border border-border rounded-lg focus:ring-2 focus:ring-brand focus:border-transparent bg-white/50 text-text-body"
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+      </div>
+
+      <div class="flex gap-3 pt-5 mt-2 border-t border-border">
+        <button 
+          type="submit" 
+          class="bg-brand text-white px-6 py-2 rounded-lg hover:bg-brand/80 transition-colors text-sm font-medium"
+        >
+          Save Changes
+        </button>
+        <a 
+          href="/admin" 
+          class="px-6 py-2 border border-border rounded-lg hover:bg-brand/10 transition-colors text-text-body text-sm font-medium"
+        >
+          Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</AdminLayout>

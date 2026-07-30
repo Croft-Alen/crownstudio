@@ -1,0 +1,163 @@
+---
+export const prerender = false;
+
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ProductGrid from '../components/ProductGrid.astro';
+import { products } from '../data/products.js';
+import categoriesData from '../data/categories.json';
+
+const url = new URL(Astro.request.url);
+const category = url.searchParams.get('category');
+const searchQuery = url.searchParams.get('search') || '';
+const sortBy = url.searchParams.get('sort') || 'relevance';
+const priceFilter = url.searchParams.get('price') || 'any';
+const minPrice = url.searchParams.get('minPrice') || '';
+const maxPrice = url.searchParams.get('maxPrice') || '';
+
+if (!category) {
+  return Astro.redirect('/');
+}
+
+const baseProducts = products.filter(p => p.category.toLowerCase() === category.toLowerCase());
+
+const isValidCategory = products.some(p => p.category.toLowerCase() === category.toLowerCase());
+if (!isValidCategory) {
+  return Astro.redirect('/');
+}
+
+const foundCategory = categoriesData.find(c => c.slug === category.toLowerCase());
+const categoryDisplayName = foundCategory ? `Browse All ${foundCategory.name}` : `Browse All ${category.charAt(0).toUpperCase() + category.slice(1)}`;
+const description = foundCategory ? foundCategory.description : '';
+
+let filteredProducts = [...baseProducts];
+
+if (searchQuery) {
+  filteredProducts = filteredProducts.filter(p => 
+    p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    p.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+}
+
+if (priceFilter === 'free') {
+  filteredProducts = filteredProducts.filter(p => p.price === 0);
+} else if (priceFilter === 'paid') {
+  filteredProducts = filteredProducts.filter(p => p.price > 0);
+}
+
+if (minPrice !== '') {
+  filteredProducts = filteredProducts.filter(p => p.price >= parseFloat(minPrice));
+}
+if (maxPrice !== '') {
+  filteredProducts = filteredProducts.filter(p => p.price <= parseFloat(maxPrice));
+}
+
+if (sortBy === 'low-to-high') {
+  filteredProducts.sort((a, b) => a.price - b.price);
+} else if (sortBy === 'high-to-low') {
+  filteredProducts.sort((a, b) => b.price - a.price);
+}
+---
+
+<Layout title={`${categoryDisplayName} Configurations`}>
+  <Header />
+  
+  <main class="bg-transparent min-h-screen">
+    <section class="pt-20 pb-8 bg-transparent">
+      <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
+        
+        <nav class="flex items-center gap-2 text-sm mb-3">
+          <a href="/" class="text-text-body hover:text-brand transition-colors">Home</a>
+          <span class="text-text-muted/30">/</span>
+          <a href="/products" class="text-text-body hover:text-brand transition-colors">Products</a>
+          <span class="text-text-muted/30">/</span>
+          <span class="text-brand font-medium">{categoryDisplayName.replace('Browse All ', '')}</span>
+        </nav>
+        
+        <div class="mb-4">
+          <h1 class="text-3xl md:text-4xl font-bold text-text-heading mb-2">
+            {categoryDisplayName}
+          </h1>
+          <p class="text-text-muted text-base max-w-2xl">
+            {description}
+          </p>
+        </div>
+        
+        <div class="max-w-2xl mb-8">
+          <form method="GET" class="relative" id="search-form">
+            <input type="hidden" name="category" value={category} />
+            <input 
+              type="text" 
+              name="search" 
+              value={searchQuery}
+              placeholder="Search products..."
+              class="w-full px-5 py-4 pr-14 border border-border rounded-full focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent text-base bg-card-bg backdrop-blur-xl shadow-sm"
+            />
+            <button type="submit" class="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted/40 hover:text-brand transition-colors">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
+          </form>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          
+          <div class="lg:col-span-1 order-2 lg:order-1">
+            <div class="bg-card-bg backdrop-blur-2xl rounded-2xl border border-border shadow-2xl p-5 sticky top-24">
+              
+              <form method="GET" id="filter-form">
+                <input type="hidden" name="category" value={category} />
+                <input type="hidden" name="search" value={searchQuery} />
+                
+                <div class="mb-6">
+                  <h4 class="text-sm font-semibold text-text-heading mb-3">Price Range</h4>
+                  <div class="space-y-3">
+                    <div class="flex gap-3">
+                      <div class="flex-1">
+                        <label class="text-xs text-text-muted">Min Price</label>
+                        <input type="number" name="minPrice" value={minPrice} placeholder="0" class="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-brand bg-white/50" />
+                      </div>
+                      <div class="flex-1">
+                        <label class="text-xs text-text-muted">Max Price</label>
+                        <input type="number" name="maxPrice" value={maxPrice} placeholder="1000" class="w-full px-3 py-2 border border-border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-brand bg-white/50" />
+                      </div>
+                    </div>
+                    <label class="flex items-center gap-2 text-sm text-text-body hover:text-text-heading cursor-pointer">
+                      <input type="radio" name="price" value="free" checked={priceFilter === 'free'} class="accent-brand" onchange="document.getElementById('filter-form').submit()" />
+                      Free only
+                    </label>
+                    <label class="flex items-center gap-2 text-sm text-text-body hover:text-text-heading cursor-pointer">
+                      <input type="radio" name="price" value="paid" checked={priceFilter === 'paid'} class="accent-brand" onchange="document.getElementById('filter-form').submit()" />
+                      Paid only
+                    </label>
+                    <label class="flex items-center gap-2 text-sm text-text-body hover:text-text-heading cursor-pointer">
+                      <input type="radio" name="price" value="any" checked={priceFilter === 'any'} class="accent-brand" onchange="document.getElementById('filter-form').submit()" />
+                      All prices
+                    </label>
+                  </div>
+                </div>
+                
+                <button type="submit" class="w-full mt-6 bg-brand text-white font-semibold text-sm py-3 rounded-lg hover:bg-brand/80 transition-colors">
+                  Apply Filters
+                </button>
+              </form>
+              
+              <a href={`/products?category=${category}`} class="block text-center text-sm text-text-muted/40 hover:text-brand transition-colors mt-3">
+                Clear all filters
+              </a>
+            </div>
+          </div>
+          
+          <div class="lg:col-span-3 order-1 lg:order-2">
+            <ProductGrid products={filteredProducts} showAll={true} />
+          </div>
+          
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <Footer />
+</Layout>

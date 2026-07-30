@@ -1,0 +1,111 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { products } from '../../data/products.js';
+
+const session = Astro.cookies.get('admin_session');
+if (!session || session.value !== 'authenticated') {
+  return Astro.redirect('/admin/login');
+}
+---
+
+<AdminLayout>
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-2xl font-bold text-text-heading">Products</h1>
+      <p class="text-text-muted text-sm mt-1">Manage your product catalog</p>
+    </div>
+    <a 
+      href="/admin/products/create" 
+      class="bg-brand text-white px-4 py-2 rounded-lg hover:bg-brand/80 transition-colors flex items-center gap-2 text-sm font-medium"
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+      </svg>
+      Add New Product
+    </a>
+  </div>
+
+  <div class="bg-card-bg rounded-xl border border-border shadow-sm overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full min-w-[700px]">
+        <thead class="bg-white/50 border-b border-border">
+          <tr>
+            <th class="text-left px-4 py-3 text-xs font-semibold text-text-muted uppercase tracking-wider">Product</th>
+            <th class="text-left px-4 py-3 text-xs font-semibold text-text-muted uppercase tracking-wider">Category</th>
+            <th class="text-left px-4 py-3 text-xs font-semibold text-text-muted uppercase tracking-wider">Price</th>
+            <th class="text-left px-4 py-3 text-xs font-semibold text-text-muted uppercase tracking-wider">Rating</th>
+            <th class="text-left px-4 py-3 text-xs font-semibold text-text-muted uppercase tracking-wider">Featured</th>
+            <th class="text-left px-4 py-3 text-xs font-semibold text-text-muted uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map((product) => (
+            <tr class="border-b border-border hover:bg-white/30 transition-colors">
+              <td class="px-4 py-3">
+                <div class="flex items-center gap-3">
+                  <img 
+                    src={product.images?.main || 'https://picsum.photos/seed/default/50/50'} 
+                    alt={product.name}
+                    class="w-10 h-10 rounded-lg object-cover bg-gray-100 shrink-0"
+                  />
+                  <span class="text-sm font-medium text-text-heading">{product.name}</span>
+                </div>
+              </td>
+              <td class="px-4 py-3 text-sm text-text-body">
+                <span class="inline-block px-2.5 py-0.5 rounded-full bg-brand/10 text-brand text-xs font-medium">
+                  {product.category}
+                </span>
+              </td>
+              <td class="px-4 py-3 text-sm font-semibold text-text-heading">${product.price}</td>
+              <td class="px-4 py-3">
+                <div class="flex items-center gap-1.5">
+                  <div class="flex items-center gap-0.5">
+                    <svg class="w-3.5 h-3.5 text-brand fill-brand" viewBox="0 0 24 24">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+                    </svg>
+                    <span class="text-sm font-medium text-text-heading">{product.rating || 0}</span>
+                  </div>
+                </div>
+              </td>
+              <td class="px-4 py-3">
+                {product.featured ? (
+                  <span class="inline-flex items-center gap-1 text-emerald-600 text-xs font-medium">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Yes
+                  </span>
+                ) : (
+                  <span class="inline-flex items-center gap-1 text-text-muted text-xs font-medium">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                    No
+                  </span>
+                )}
+              </td>
+              <td class="px-4 py-3">
+                <div class="flex items-center gap-2">
+                  <a 
+                    href={`/admin/products/${product.slug}`}
+                    class="text-brand hover:text-brand/80 text-sm font-medium transition-colors"
+                  >
+                    Edit
+                  </a>
+                  <span class="text-border">|</span>
+                  <a 
+                    href={`/api/products/delete/${product.slug}`}
+                    class="text-red-500 hover:text-red-600 text-sm font-medium transition-colors"
+                    onclick="return confirm('Delete this product?')"
+                  >
+                    Delete
+                  </a>
+                </div>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</AdminLayout>

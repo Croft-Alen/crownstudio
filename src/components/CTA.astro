@@ -1,0 +1,78 @@
+---
+import { getPageData } from '../data/pages.js';
+
+const pageData = getPageData('home');
+const cta = pageData.cta;
+---
+
+<section class="py-16 bg-transparent">
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    
+    <div class="relative bg-card-bg rounded-3xl border border-border shadow-xl p-8 md:p-10 transition-all duration-300 hover:shadow-2xl overflow-hidden">
+      
+      <!-- Thick brand color top border -->
+      <div class="absolute top-0 left-0 right-0 h-1.5 bg-brand"></div>
+      
+      <!-- Content -->
+      <div class="relative text-center">
+        
+        <h2 class="text-xl md:text-2xl font-bold text-text-heading mb-2">
+          {cta.heading}
+        </h2>
+        
+        <p class="text-text-muted text-sm max-w-xl mx-auto mb-6">
+          {cta.subtext}
+        </p>
+        
+        <div class="flex flex-wrap items-center justify-center gap-3">
+          <a 
+            href={cta.primaryButton.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 bg-brand text-white font-semibold px-6 py-2.5 rounded-full text-sm shadow-md"
+          >
+            {cta.primaryButton.text}
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </a>
+          
+          <a 
+            href={cta.secondaryButton.url}
+            class="inline-flex items-center gap-1 text-text-body hover:text-brand font-medium px-4 py-2.5 rounded-full text-sm transition-colors duration-300"
+          >
+            {cta.secondaryButton.text}
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </a>
+        </div>
+        
+        <!-- Small trust indicator -->
+        <div class="flex items-center justify-center gap-4 mt-5 pt-5 border-t border-border/50">
+          <div class="flex items-center gap-1">
+            <svg class="w-3.5 h-3.5 text-brand" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <svg class="w-3.5 h-3.5 text-brand" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <svg class="w-3.5 h-3.5 text-brand" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <svg class="w-3.5 h-3.5 text-brand" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            <svg class="w-3.5 h-3.5 text-brand" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+          </div>
+          <span class="text-xs text-text-muted">Trusted by 200+ server owners</span>
+        </div>
+        
+      </div>
+      
+    </div>
+    
+  </div>
+</section>

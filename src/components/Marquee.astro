@@ -1,0 +1,76 @@
+---
+import { getPageData } from '../data/pages.js';
+
+const pageData = getPageData('home');
+const marquee = pageData.marquee || { row1: [], row2: [] };
+
+// Use CMS data or fallback
+const textItems = marquee.row1.length > 0 
+  ? marquee.row1.map(item => ({ text: item }))
+  : [
+      { text: "Premium Minecraft Configurations" },
+      { text: "Server Setup & Optimization" },
+      { text: "Plugin Configuration & Development" },
+      { text: "High-Performance & Lag-Free" },
+      { text: "Trusted by 200+ Server Owners" }
+    ];
+
+const repeatedText = textItems.map(item => `✦ ${item.text}`).join(' — ');
+const fullText = Array(6).fill(repeatedText).join(' — ');
+---
+
+<section class="w-full py-8 overflow-hidden bg-transparent flex items-center justify-center">
+  <div class="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="relative w-full h-[180px] md:h-[220px] mask-fade flex items-center justify-center">
+      <svg class="absolute inset-0 w-full h-full" viewBox="0 0 1200 220" preserveAspectRatio="none">
+        <path 
+          id="marqueePath" 
+          d="M0,110 Q200,30 400,110 T800,110 T1200,110" 
+          fill="none" 
+          stroke="none"
+        />
+        <text class="outline-text font-bold text-xl md:text-2xl tracking-wider text-text-heading">
+          <textPath id="marqueeTextPath" href="#marqueePath" startOffset="0%">
+            {fullText}
+          </textPath>
+        </text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<style>
+  .mask-fade {
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+  }
+
+  .outline-text {
+    font-weight: 900;
+    letter-spacing: 0.05em;
+  }
+
+  .outline-text textPath {
+    fill: currentColor;
+  }
+</style>
+
+<script>
+  (function() {
+    const textPath = document.getElementById('marqueeTextPath');
+    if (!textPath) return;
+    
+    let offset = 0;
+    
+    function animate() {
+      offset -= 0.08;
+      if (offset <= -33.333) {
+        offset = 0;
+      }
+      textPath.setAttribute('startOffset', offset + '%');
+      requestAnimationFrame(animate);
+    }
+    
+    animate();
+  })();
+</script>

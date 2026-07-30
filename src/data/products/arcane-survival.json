@@ -1,0 +1,29 @@
+{
+  "id": 1,
+  "slug": "arcane-survival",
+  "name": "Arcane Survival ",
+  "category": "setup",
+  "price": 19,
+  "currency": "EUR",
+  "rating": 4.8,
+  "reviews": 24,
+  "featured": true,
+  "description": "A high-quality survival setup based on a medieval theme. Fully optimized and bug-free",
+  "detailDescription": "<ol><li><p>A high-quality survival setup based on a medieval theme. Fully optimized and bug-free</p></li></ol><p><a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"https://builtbybit.com\">Survival</a></p><p></p>",
+  "images": {
+    "main": "/uploads/products/arcane-survival/spawn1.webp",
+    "gallery": [
+      "/uploads/products/arcane-survival/spawn1.webp",
+      "/uploads/products/arcane-survival/spawn2.webp",
+      "/uploads/products/arcane-survival/spawn3.jpg",
+      "/uploads/products/arcane-survival/spawn4.jpg",
+      "/uploads/products/arcane-survival/spawn5.webp"
+    ]
+  },
+  "buyLink": "https://builtbybit.com/resources/arcane-survival",
+  "tags": [
+    "Survival",
+    "Medieval",
+    "Premium"
+  ]
+}

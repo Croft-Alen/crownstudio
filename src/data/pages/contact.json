@@ -1,0 +1,19 @@
+{
+  "hero": {
+    "tag": "Contact Us",
+    "heading": "Get in Touch",
+    "subtext": "Have questions? We'd love to hear from you. Reach out and we'll get back to you within 24 hours."
+  },
+  "form": {
+    "namePlaceholder": "John Doe",
+    "emailPlaceholder": "john@example.com",
+    "messagePlaceholder": "Tell us about your project...",
+    "buttonText": "Send Message"
+  },
+  "info": {
+    "heading": "Contact Information",
+    "email": "contact@crownstudio.com",
+    "discord": "crownstudio",
+    "responseTime": "Within 24 hours"
+  }
+}

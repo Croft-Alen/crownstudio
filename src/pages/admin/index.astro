@@ -1,0 +1,164 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { products } from '../../data/products.js';
+import categoriesData from '../../data/categories.json';
+import { getActivities } from '../../lib/activity';
+
+const session = Astro.cookies.get('admin_session');
+if (!session || session.value !== 'authenticated') {
+  return Astro.redirect('/admin/login');
+}
+
+const productCount = products.length;
+const categoryCount = categoriesData.length;
+const activities = getActivities(5);
+
+const iconPaths = {
+  package: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10',
+  tag: 'M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z',
+  file: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
+  shopping: 'M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.4 6M17 13l2.4 6M9 21a1 1 0 11-2 0 1 1 0 012 0zm8 0a1 1 0 11-2 0 1 1 0 012 0z',
+  star: 'M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z',
+  plus: 'M12 4v16m8-8H4',
+  eye: 'M15 12a3 3 0 11-6 0 3 3 0 016 0z M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z',
+  home: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
+  clock: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
+};
+
+const quickActions = [
+  { name: 'Add Product', icon: 'plus', href: '/admin/products/create' },
+  { name: 'Add Category', icon: 'tag', href: '/admin/categories/create' },
+  { name: 'Edit Homepage', icon: 'home', href: '/admin/homepage' },
+  { name: 'View Site', icon: 'eye', href: '/' },
+];
+
+function formatTime(timestamp: number): string {
+  const diff = Date.now() - timestamp;
+  const minutes = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  const days = Math.floor(diff / 86400000);
+
+  if (minutes < 1) return 'Just now';
+  if (minutes < 60) return `${minutes}m ago`;
+  if (hours < 24) return `${hours}h ago`;
+  return `${days}d ago`;
+}
+---
+
+<AdminLayout>
+  <div class="space-y-6">
+    
+    <!-- Header -->
+    <div>
+      <h1 class="text-2xl font-bold text-text-heading">Dashboard</h1>
+      <p class="text-text-muted text-sm mt-1">Welcome back to CrownStudio CMS</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      
+      <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5 hover:shadow-md transition-shadow">
+        <div class="flex items-center gap-4">
+          <div class="w-11 h-11 rounded-xl bg-brand/10 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d={iconPaths.shopping} />
+            </svg>
+          </div>
+          <div>
+            <p class="text-xs text-text-muted uppercase tracking-wider">Total Products</p>
+            <p class="text-2xl font-bold text-text-heading">{productCount}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5 hover:shadow-md transition-shadow">
+        <div class="flex items-center gap-4">
+          <div class="w-11 h-11 rounded-xl bg-brand/10 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d={iconPaths.tag} />
+            </svg>
+          </div>
+          <div>
+            <p class="text-xs text-text-muted uppercase tracking-wider">Categories</p>
+            <p class="text-2xl font-bold text-text-heading">{categoryCount}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5 hover:shadow-md transition-shadow">
+        <div class="flex items-center gap-4">
+          <div class="w-11 h-11 rounded-xl bg-brand/10 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d={iconPaths.star} />
+            </svg>
+          </div>
+          <div>
+            <p class="text-xs text-text-muted uppercase tracking-wider">Avg Rating</p>
+            <p class="text-2xl font-bold text-text-heading">4.8</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5 hover:shadow-md transition-shadow">
+        <div class="flex items-center gap-4">
+          <div class="w-11 h-11 rounded-xl bg-brand/10 flex items-center justify-center shrink-0">
+            <svg class="w-5 h-5 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d={iconPaths.file} />
+            </svg>
+          </div>
+          <div>
+            <p class="text-xs text-text-muted uppercase tracking-wider">Total Pages</p>
+            <p class="text-2xl font-bold text-text-heading">5</p>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+      <h2 class="text-sm font-semibold text-text-heading mb-4">Quick Actions</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {quickActions.map((action) => (
+          <a 
+            href={action.href}
+            class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg border border-border hover:border-brand/30 hover:bg-brand/5 transition-all duration-200 text-sm font-medium text-text-body hover:text-brand group"
+          >
+            <svg class="w-4 h-4 text-text-muted group-hover:text-brand transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d={iconPaths[action.icon]} />
+            </svg>
+            {action.name}
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- Recent Activity - REAL -->
+    <div class="bg-card-bg rounded-xl border border-border shadow-sm p-5">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-sm font-semibold text-text-heading">Recent Activity</h2>
+        <span class="text-xs text-text-muted">Last {activities.length} actions</span>
+      </div>
+      <div class="space-y-2">
+        {activities.length > 0 ? (
+          activities.map((activity) => (
+            <div class="flex items-center gap-3 py-2 border-b border-border/50 last:border-0">
+              <div class={`w-2 h-2 rounded-full shrink-0 ${
+                activity.type === 'create' ? 'bg-emerald-500' :
+                activity.type === 'update' ? 'bg-amber-500' :
+                'bg-red-500'
+              }`}></div>
+              <span class="text-sm text-text-body flex-1">{activity.action}</span>
+              <span class="text-xs text-text-muted shrink-0">{formatTime(activity.timestamp)}</span>
+            </div>
+          ))
+        ) : (
+          <div class="text-center py-6">
+            <p class="text-sm text-text-muted">No activity yet. Start by adding a product or category!</p>
+          </div>
+        )}
+      </div>
+    </div>
+
+  </div>
+</AdminLayout>

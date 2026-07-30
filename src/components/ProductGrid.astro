@@ -1,0 +1,39 @@
+---
+import ProductCard from './ProductCard.astro';
+
+export interface Props {
+  products: any[];
+  title?: string;
+  limit?: number;
+  showAll?: boolean;
+}
+
+const { products, title, limit = 8, showAll = false } = Astro.props;
+
+const displayProducts = showAll ? products : products.slice(0, limit);
+---
+
+<section class="py-4 bg-transparent">
+  <div class="max-w-full">
+    {title && (
+      <h2 class="text-3xl font-bold text-center text-text-heading mb-12">{title}</h2>
+    )}
+    
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+      {displayProducts.map((product: any) => (
+        <ProductCard product={product} />
+      ))}
+    </div>
+
+    {!showAll && products.length > limit && (
+      <div class="text-center mt-10">
+        <a 
+          href="/products" 
+          class="inline-block bg-brand hover:bg-brand-dark text-white font-semibold px-8 py-3 rounded-full transition-colors"
+        >
+          View All Products →
+        </a>
+      </div>
+    )}
+  </div>
+</section>

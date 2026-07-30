@@ -1,0 +1,192 @@
+{
+  "hero": {
+    "tag": "Premium Minecraft Resources",
+    "heading": "Premium Minecraft<br />Server Setup & Config",
+    "subtext": "Professional Minecraft setup, configuration, optimization and plugins.",
+    "primaryButton": {
+      "text": "Get Started",
+      "url": "https://builtbybit.com/"
+    },
+    "secondaryButton": {
+      "text": "View Products",
+      "url": "/products"
+    },
+    "stats": [
+      {
+        "number": "15+",
+        "label": "Servers Configured",
+        "icon": "server"
+      },
+      {
+        "number": "20+",
+        "label": "Happy Clients",
+        "icon": "users"
+      },
+      {
+        "number": "30+",
+        "label": "Resources Sold",
+        "icon": "box"
+      }
+    ]
+  },
+  "features": {
+    "tag": "Why Choose Us",
+    "heading": "Why Choose Crown Studio?",
+    "subtext": "We deliver premium Minecraft configurations built for performance, clarity, and long-term success.",
+    "features": [
+      {
+        "icon": "check",
+        "title": "Tailored Configuration ",
+        "description": "Every setup is built around your server's needs, ensuring everything works together smoothly from day one.",
+        "stats": [
+          {
+            "icon": "settings",
+            "label": "20+ servers configured"
+          },
+          {
+            "icon": "settings",
+            "label": "Setup completed"
+          },
+          {
+            "icon": "settings",
+            "label": "Optimized"
+          },
+          {
+            "icon": "rocket",
+            "label": "Ready-to-deploy"
+          },
+          {
+            "icon": "settings",
+            "label": "24/7 dedicated support"
+          },
+          {
+            "icon": "settings",
+            "label": "High-performance optimized"
+          }
+        ]
+      },
+      {
+        "icon": "rocket",
+        "title": "Performance First",
+        "description": "Optimized settings designed to keep your server responsive, stable, and running at its best."
+      },
+      {
+        "icon": "code",
+        "title": "Clean & Organized",
+        "description": "Well-structured configuration files that are easy to understand, manage, and expand over time."
+      },
+      {
+        "icon": "globe",
+        "title": "Cross-Plugin Compatibility",
+        "description": "Plugins are configured to work seamlessly together, reducing conflicts and improving overall stability."
+      },
+      {
+        "icon": "star",
+        "title": "Polished Player Experience",
+        "description": "Clean menus, intuitive layouts, and consistent design create a professional experience for every player."
+      },
+      {
+        "icon": "refresh",
+        "title": "Future-Ready Setup",
+        "description": "Built using modern configuration practices, making future updates and expansions simple and hassle-free."
+      }
+    ]
+  },
+  "categories": {
+    "tag": "Our Shop",
+    "heading": "What We Offer",
+    "subtext": "Explore premium configurations, setups, and plugins for your Minecraft server",
+    "buttonText": "Explore Now"
+  },
+  "reviews": {
+    "tag": "Testimonials",
+    "heading": "What Our Clients Say",
+    "subtext": "Real feedback from server owners who trusted us with their configurations",
+    "reviews": [
+      {
+        "rating": 5,
+        "text": "All my respect! The developer helped me a lot and everything works perfectly. Thanks again!",
+        "name": "RAZOR",
+        "role": "Verified Client",
+        "initial": "R"
+      },
+      {
+        "rating": 5,
+        "text": "Incredible work! The configuration was exactly what we needed. Highly recommend CrownStudio.",
+        "name": "MinecraftPro",
+        "role": "Server Owner",
+        "initial": "M"
+      },
+      {
+        "rating": 5,
+        "text": "Fast delivery and perfect setup. My server has never run smoother. Will definitely order again.",
+        "name": "Jake_123",
+        "role": "Happy Client",
+        "initial": "J"
+      },
+      {
+        "rating": 5,
+        "text": "Best configs I've ever used! My players love the new setup. Highly professional work.",
+        "name": "ShadowCraft",
+        "role": "Network Owner",
+        "initial": "S"
+      },
+      {
+        "rating": 5,
+        "text": "Amazing support and quick turnaround. The configuration was exactly what I needed.",
+        "name": "Alex_Dev",
+        "role": "Plugin Developer",
+        "initial": "A"
+      },
+      {
+        "rating": 5,
+        "text": "CrownStudio delivered beyond expectations. My server runs smoother than ever before!",
+        "name": "TechGamer",
+        "role": "Server Admin",
+        "initial": "T"
+      },
+      {
+        "rating": 5,
+        "text": "The best investment for my server. Professional, fast, and reliable service every time.",
+        "name": "KingCraft",
+        "role": "Server Owner",
+        "initial": "K"
+      },
+      {
+        "rating": 5,
+        "text": "Highly recommend! The configuration was flawless and my server performance improved instantly.",
+        "name": "LunarMC",
+        "role": "Community Manager",
+        "initial": "L"
+      }
+    ]
+  },
+  "cta": {
+    "heading": "Ready to Upgrade Your Server?",
+    "subtext": "Get a premium Minecraft configuration that delivers exceptional gameplay experience.",
+    "primaryButton": {
+      "text": "Get Started Now",
+      "url": "https://builtbybit.com/members/crownstudio"
+    },
+    "secondaryButton": {
+      "text": "Contact Us",
+      "url": "/contact"
+    }
+  },
+  "marquee": {
+    "row1": [
+      "★ Premium Minecraft Plugins",
+      "◆ Server Setup & Optimization",
+      "★ Plugin Configuration & Development",
+      "◆ High-Performance & Lag-Free",
+      "★ Trusted by 200+ Server Owners"
+    ],
+    "row2": [
+      "◆ Premium Minecraft Configurations",
+      "★ Server Setup & Optimization",
+      "◆ Plugin Configuration & Development",
+      "★ High-Performance & Lag-Free",
+      "◆ Trusted by 200+ Server Owners"
+    ]
+  }
+}
