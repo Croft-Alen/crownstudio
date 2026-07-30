@@ -9,11 +9,8 @@ export default defineConfig({
   adapter: node({
     mode: "standalone"
   }),
-  vite: {
-    server: {
-      fs: {
-        allow: ['..']
-      }
-    }
+  build: {
+    client: ".vercel/output/static",
+    server: ".vercel/output/functions/server"
   }
 });
