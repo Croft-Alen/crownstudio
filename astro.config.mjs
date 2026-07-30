@@ -1,12 +1,14 @@
 import { defineConfig } from "astro/config";
 import tailwind from "@astrojs/tailwind";
-import vercel from "@astrojs/vercel/serverless";
+import node from "@astrojs/node";
 
 export default defineConfig({
   integrations: [tailwind()],
   site: "https://crownstudio.com",
   output: "server",
-  adapter: vercel(),
+  adapter: node({
+    mode: "standalone"
+  }),
   vite: {
     server: {
       fs: {
