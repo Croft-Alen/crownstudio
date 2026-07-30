@@ -2,7 +2,6 @@
   "name": "crownstudio",
   "type": "module",
   "version": "0.0.1",
- 
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
@@ -12,17 +11,16 @@
     "start": "node dist/server/entry.mjs"
   },
   "dependencies": {
-    "@astrojs/tailwind": "^5.1.5",
     "@tiptap/core": "^2.11.5",
     "@tiptap/extension-link": "^2.11.5",
     "@tiptap/extension-placeholder": "^2.11.5",
     "@tiptap/starter-kit": "^2.11.5",
-    "astro": "^4.15.0",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.17"
   },
   "devDependencies": {
-    "@astrojs/vercel": "^7.8.0"
+    "@astrojs/vercel": "^11.0.4",
+    "astro": "^7.1.6"
   }
 }
