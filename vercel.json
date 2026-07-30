@@ -1,0 +1,25 @@
+{
+  "functions": {
+    ".vercel/output/functions/server/entry.mjs": {
+      "runtime": "nodejs20.x"
+    }
+  },
+  "routes": [
+    {
+      "src": "/_astro/(.*)",
+      "dest": "/.vercel/output/static/_astro/$1"
+    },
+    {
+      "src": "/images/(.*)",
+      "dest": "/.vercel/output/static/images/$1"
+    },
+    {
+      "src": "/test.html",
+      "dest": "/.vercel/output/static/test.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/.vercel/output/functions/server/entry.mjs"
+    }
+  ]
+}
