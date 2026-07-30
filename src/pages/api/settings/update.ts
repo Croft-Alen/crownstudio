@@ -25,9 +25,9 @@ export const POST: APIRoute = async ({ request, redirect }) => {
 
     logActivity('Updated site settings', 'update');
 
-    return redirect('/admin/settings', 302);
+    return redirect('/admin/settings?success=true', 302);
   } catch (error) {
     console.error(error);
-    return new Response('Error updating settings: ' + error.message, { status: 500 });
+    return redirect(`/admin/settings?error=${encodeURIComponent(error.message)}`, 302);
   }
 };
