@@ -6,7 +6,10 @@ export default defineConfig({
   integrations: [tailwind()],
   site: "https://crownstudio.com",
   output: "server",
-  adapter: vercel(),
+  adapter: vercel({
+    runtime: 'nodejs20.x',  
+    functionPerRoute: false,
+  }),
   vite: {
     server: {
       fs: {
