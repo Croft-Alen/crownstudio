@@ -7,8 +7,7 @@ export default defineConfig({
   site: "https://crownstudio.com",
   output: "server",
   adapter: vercel({
-    runtime: 'nodejs20.x',  
-    functionPerRoute: false,
+    runtime: 'nodejs18.x',
   }),
   vite: {
     server: {
