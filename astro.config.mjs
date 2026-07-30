@@ -9,10 +9,6 @@ export default defineConfig({
   adapter: node({
     mode: "standalone"
   }),
-  build: {
-    client: "dist/client",
-    server: "dist/server"
-  },
   vite: {
     server: {
       fs: {
