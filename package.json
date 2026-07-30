@@ -10,12 +10,10 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "vercel-build": "npm run build",
-    "start": "node server.js"
+    "vercel-build": "npm run build"
   },
   "dependencies": {
     "@astrojs/tailwind": "^5.1.5",
-    "@astrojs/node": "^8.3.0",
     "@tiptap/core": "^2.11.5",
     "@tiptap/extension-link": "^2.11.5",
     "@tiptap/extension-placeholder": "^2.11.5",
